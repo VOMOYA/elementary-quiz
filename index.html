@@ -3,1136 +3,1099 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>小学校6年間 総復習クイズ！</title>
+<title>AI小学校総復習クイズ 🎓</title>
 <link href="https://fonts.googleapis.com/css2?family=Kaisei+Decol:wght@400;700&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0f0e2a;
-    --bg2: #1a1840;
-    --yellow: #ffd93d;
-    --coral: #ff6b6b;
-    --mint: #6bcb77;
-    --sky: #4d96ff;
-    --pink: #ff87c3;
-    --purple: #a855f7;
-    --card-radius: 18px;
-    --white: #f0eeff;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Noto Sans JP', sans-serif;
-    background: var(--bg);
-    color: var(--white);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+:root {
+  --bg: #0d0c26;
+  --bg2: #181638;
+  --bg3: #221f4a;
+  --yellow: #ffd93d;
+  --coral: #ff6b6b;
+  --mint: #6bcb77;
+  --sky: #4d96ff;
+  --pink: #ff87c3;
+  --purple: #a855f7;
+  --card-r: 18px;
+  --white: #f0eeff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 8% 15%, rgba(255,255,255,.85) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 25% 65%, rgba(255,255,255,.65) 0%,transparent 100%),
+    radial-gradient(1px 1px at 45% 8%, rgba(255,255,255,.9) 0%,transparent 100%),
+    radial-gradient(1px 1px at 68% 45%, rgba(255,255,255,.7) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 82% 22%, rgba(255,255,255,.8) 0%,transparent 100%),
+    radial-gradient(1px 1px at 12% 82%, rgba(255,255,255,.6) 0%,transparent 100%),
+    radial-gradient(1px 1px at 56% 88%, rgba(255,255,255,.7) 0%,transparent 100%),
+    radial-gradient(2px 2px at 37% 37%, rgba(255,217,61,.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 91% 75%, rgba(255,255,255,.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 3% 50%, rgba(255,255,255,.6) 0%,transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+/* ── screens ── */
+.screen { display: none; position: relative; z-index: 1; animation: fadeUp .45s ease; }
+.screen.active { display: block; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
 
-  /* ★ Stars background */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.8) 0%, transparent 100%),
-      radial-gradient(1.5px 1.5px at 30% 70%, rgba(255,255,255,0.6) 0%, transparent 100%),
-      radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,0.9) 0%, transparent 100%),
-      radial-gradient(1px 1px at 70% 50%, rgba(255,255,255,0.7) 0%, transparent 100%),
-      radial-gradient(1.5px 1.5px at 85% 25%, rgba(255,255,255,0.8) 0%, transparent 100%),
-      radial-gradient(1px 1px at 15% 85%, rgba(255,255,255,0.6) 0%, transparent 100%),
-      radial-gradient(1px 1px at 60% 90%, rgba(255,255,255,0.7) 0%, transparent 100%),
-      radial-gradient(2px 2px at 40% 40%, rgba(255,217,61,0.5) 0%, transparent 100%),
-      radial-gradient(1px 1px at 90% 80%, rgba(255,255,255,0.5) 0%, transparent 100%),
-      radial-gradient(1px 1px at 5% 55%, rgba(255,255,255,0.6) 0%, transparent 100%);
-    pointer-events: none;
-    z-index: 0;
-  }
+/* ── shared components ── */
+.page-wrap {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 20px 60px;
+}
+.back-btn {
+  align-self: flex-start;
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,.2);
+  color: rgba(255,255,255,.65);
+  border-radius: 100px;
+  padding: 8px 20px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  transition: all .2s;
+  margin-bottom: 28px;
+}
+.back-btn:hover { background: rgba(255,255,255,.08); color: var(--white); }
+.page-title {
+  font-family: 'Kaisei Decol', serif;
+  font-size: clamp(22px, 5vw, 32px);
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 6px;
+}
+.page-sub { font-size: 13px; color: rgba(240,238,255,.6); text-align: center; margin-bottom: 28px; }
 
-  /* === Screens === */
-  .screen { display: none; position: relative; z-index: 1; }
-  .screen.active { display: block; }
+/* ── API key screen ── */
+#key-screen .page-wrap { justify-content: center; }
+.key-card {
+  background: var(--bg2);
+  border: 2px solid rgba(255,255,255,.1);
+  border-radius: 24px;
+  padding: 36px 28px;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+.key-icon { font-size: 60px; margin-bottom: 20px; }
+.key-title { font-family: 'Kaisei Decol', serif; font-size: 24px; font-weight: 700; margin-bottom: 10px; }
+.key-desc { font-size: 13px; color: rgba(240,238,255,.65); line-height: 1.7; margin-bottom: 24px; }
+.key-input {
+  width: 100%;
+  background: rgba(255,255,255,.06);
+  border: 1.5px solid rgba(255,255,255,.15);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: var(--white);
+  font-family: monospace;
+  font-size: 13px;
+  margin-bottom: 16px;
+  outline: none;
+  transition: border-color .2s;
+}
+.key-input:focus { border-color: var(--sky); }
+.key-save-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--sky), var(--purple));
+  border: none;
+  color: white;
+  border-radius: 100px;
+  padding: 16px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all .2s;
+  box-shadow: 0 6px 25px rgba(77,150,255,.35);
+}
+.key-save-btn:hover { transform: scale(1.03); }
+.key-notice {
+  font-size: 11px;
+  color: rgba(240,238,255,.4);
+  margin-top: 14px;
+  line-height: 1.5;
+}
 
-  /* === Title Screen === */
-  #title-screen {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-    animation: fadeIn 0.6s ease;
-  }
-  .title-badge {
-    background: linear-gradient(135deg, var(--yellow), #ffb300);
-    color: #1a1400;
-    font-size: 12px;
-    font-weight: 900;
-    padding: 6px 16px;
-    border-radius: 100px;
-    letter-spacing: 2px;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    box-shadow: 0 4px 15px rgba(255,217,61,0.4);
-  }
-  .title-main {
-    font-family: 'Kaisei Decol', serif;
-    font-size: clamp(2rem, 8vw, 3.5rem);
-    font-weight: 700;
-    text-align: center;
-    line-height: 1.3;
-    background: linear-gradient(135deg, var(--yellow), var(--pink), var(--sky));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 10px;
-    filter: drop-shadow(0 0 30px rgba(255,135,195,0.3));
-  }
-  .title-sub {
-    font-size: 16px;
-    color: rgba(240,238,255,0.7);
-    margin-bottom: 40px;
-    text-align: center;
-  }
-  .mascot {
-    font-size: 80px;
-    margin-bottom: 30px;
-    animation: bounce 2s infinite;
-    display: block;
-    text-align: center;
-    filter: drop-shadow(0 10px 30px rgba(255,107,107,0.3));
-  }
-  .subject-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    width: 100%;
-    max-width: 480px;
-    margin-bottom: 30px;
-  }
-  .subject-card {
-    background: var(--bg2);
-    border-radius: var(--card-radius);
-    padding: 22px 18px;
-    cursor: pointer;
-    border: 3px solid transparent;
-    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .subject-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.3s;
-    border-radius: 15px;
-  }
-  .subject-card:hover { transform: translateY(-6px) scale(1.03); }
-  .subject-card:hover::before { opacity: 0.15; }
-  .subject-card:active { transform: scale(0.97); }
-  .subject-card.math { border-color: var(--sky); }
-  .subject-card.math::before { background: var(--sky); }
-  .subject-card.math:hover { box-shadow: 0 12px 40px rgba(77,150,255,0.35); }
-  .subject-card.japanese { border-color: var(--coral); }
-  .subject-card.japanese::before { background: var(--coral); }
-  .subject-card.japanese:hover { box-shadow: 0 12px 40px rgba(255,107,107,0.35); }
-  .subject-card.science { border-color: var(--mint); }
-  .subject-card.science::before { background: var(--mint); }
-  .subject-card.science:hover { box-shadow: 0 12px 40px rgba(107,203,119,0.35); }
-  .subject-card.social { border-color: var(--yellow); }
-  .subject-card.social::before { background: var(--yellow); }
-  .subject-card.social:hover { box-shadow: 0 12px 40px rgba(255,217,61,0.35); }
-  .subject-card.english { border-color: var(--pink); grid-column: 1 / -1; }
-  .subject-card.english::before { background: var(--pink); }
-  .subject-card.english:hover { box-shadow: 0 12px 40px rgba(255,135,195,0.35); }
-  .subject-emoji { font-size: 40px; display: block; margin-bottom: 10px; }
-  .subject-name {
-    font-size: 18px;
-    font-weight: 900;
-    display: block;
-    margin-bottom: 4px;
-  }
-  .subject-desc { font-size: 11px; color: rgba(240,238,255,0.55); }
-  .subject-card.math .subject-name { color: var(--sky); }
-  .subject-card.japanese .subject-name { color: var(--coral); }
-  .subject-card.science .subject-name { color: var(--mint); }
-  .subject-card.social .subject-name { color: var(--yellow); }
-  .subject-card.english .subject-name { color: var(--pink); }
+/* ── home screen ── */
+.mascot { font-size: 72px; margin-bottom: 16px; animation: bounce 2.2s infinite; display: block; text-align: center; }
+@keyframes bounce { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-12px); } }
+.home-title {
+  font-family: 'Kaisei Decol', serif;
+  font-size: clamp(1.8rem, 7vw, 3rem);
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--yellow), var(--pink), var(--sky));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: center;
+  margin-bottom: 6px;
+}
+.stats-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 28px;
+  width: 100%;
+  max-width: 480px;
+}
+.stat-pill {
+  flex: 1;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 100px;
+  padding: 9px 12px;
+  text-align: center;
+  font-size: 12px;
+}
+.stat-pill b { font-size: 20px; font-family: 'Kaisei Decol', serif; color: var(--yellow); display: block; }
 
-  /* Score display */
-  .score-bar {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 24px;
-    width: 100%;
-    max-width: 480px;
-  }
-  .score-pill {
-    background: rgba(255,255,255,0.08);
-    border-radius: 100px;
-    padding: 8px 20px;
-    font-size: 13px;
-    border: 1px solid rgba(255,255,255,0.1);
-    flex: 1;
-    text-align: center;
-  }
-  .score-pill span { font-weight: 900; font-size: 18px; color: var(--yellow); }
+.subject-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 28px;
+}
+.subj-card {
+  background: var(--bg2);
+  border-radius: var(--card-r);
+  padding: 22px 16px;
+  cursor: pointer;
+  border: 2.5px solid;
+  transition: all .25s cubic-bezier(.175,.885,.32,1.275);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.subj-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity .3s;
+}
+.subj-card:hover { transform: translateY(-6px); }
+.subj-card:hover::after { opacity: .06; }
+.subj-card:active { transform: scale(.97); }
+.subj-card.math { border-color: var(--sky); color: var(--sky); }
+.subj-card.math:hover { box-shadow: 0 12px 40px rgba(77,150,255,.35); }
+.subj-card.japanese { border-color: var(--coral); color: var(--coral); }
+.subj-card.japanese:hover { box-shadow: 0 12px 40px rgba(255,107,107,.35); }
+.subj-card.science { border-color: var(--mint); color: var(--mint); }
+.subj-card.science:hover { box-shadow: 0 12px 40px rgba(107,203,119,.35); }
+.subj-card.social { border-color: var(--yellow); color: var(--yellow); }
+.subj-card.social:hover { box-shadow: 0 12px 40px rgba(255,217,61,.35); }
+.subj-card.english { border-color: var(--pink); color: var(--pink); grid-column: 1 / -1; }
+.subj-card.english:hover { box-shadow: 0 12px 40px rgba(255,135,195,.35); }
+.subj-emoji { font-size: 38px; display: block; margin-bottom: 10px; }
+.subj-name { font-size: 18px; font-weight: 900; display: block; margin-bottom: 4px; }
+.subj-meta { font-size: 11px; color: rgba(240,238,255,.5); }
 
-  /* === Grade Screen === */
-  #grade-screen {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-    animation: slideUp 0.4s ease;
-  }
-  .screen-title {
-    font-family: 'Kaisei Decol', serif;
-    font-size: 26px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    text-align: center;
-  }
-  .screen-hint { font-size: 13px; color: rgba(240,238,255,0.6); margin-bottom: 36px; text-align: center; }
-  .grade-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    max-width: 380px;
-    width: 100%;
-    margin-bottom: 30px;
-  }
-  .grade-btn {
-    background: var(--bg2);
-    border: 3px solid var(--accent, var(--sky));
-    border-radius: var(--card-radius);
-    padding: 24px 10px;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    text-align: center;
-    color: var(--white);
-    font-family: 'Noto Sans JP', sans-serif;
-  }
-  .grade-btn:hover {
-    transform: scale(1.08);
-    background: var(--accent, var(--sky));
-    color: #0f0e2a;
-    box-shadow: 0 8px 30px rgba(77,150,255,0.4);
-  }
-  .grade-btn .grade-num {
-    font-size: 32px;
-    font-weight: 900;
-    font-family: 'Kaisei Decol', serif;
-    display: block;
-  }
-  .grade-btn .grade-label { font-size: 11px; opacity: 0.8; }
-  .back-btn {
-    background: transparent;
-    border: 2px solid rgba(255,255,255,0.2);
-    color: rgba(255,255,255,0.7);
-    border-radius: 100px;
-    padding: 10px 28px;
-    cursor: pointer;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 14px;
-    transition: all 0.2s;
-  }
-  .back-btn:hover { background: rgba(255,255,255,0.1); color: var(--white); }
+/* recommendation box */
+.rec-box {
+  background: rgba(255,217,61,.08);
+  border: 1.5px solid rgba(255,217,61,.25);
+  border-radius: 16px;
+  padding: 16px 20px;
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 24px;
+}
+.rec-title { font-size: 12px; font-weight: 700; color: var(--yellow); letter-spacing: 1px; margin-bottom: 10px; }
+.rec-items { display: flex; flex-direction: column; gap: 6px; }
+.rec-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 10px;
+  transition: background .2s;
+}
+.rec-item:hover { background: rgba(255,255,255,.05); }
+.rec-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.rec-dot.bad { background: var(--coral); }
+.rec-dot.mid { background: var(--yellow); }
 
-  /* === Quiz Screen === */
-  #quiz-screen {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px 20px 50px;
-    animation: slideUp 0.4s ease;
-  }
-  .quiz-header {
-    width: 100%;
-    max-width: 520px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 20px;
-  }
-  .quiz-info {
-    flex: 1;
-  }
-  .quiz-subject-tag {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-    opacity: 0.8;
-  }
-  .progress-wrap {
-    background: rgba(255,255,255,0.1);
-    border-radius: 100px;
-    height: 8px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    border-radius: 100px;
-    background: linear-gradient(90deg, var(--sky), var(--pink));
-    transition: width 0.4s ease;
-  }
-  .question-counter {
-    font-size: 20px;
-    font-weight: 900;
-    font-family: 'Kaisei Decol', serif;
-    white-space: nowrap;
-  }
-  .question-counter span { font-size: 13px; font-weight: 400; opacity: 0.6; }
+/* ── subject/grade/unit screen ── */
+.grade-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 560px;
+}
+.grade-tab {
+  background: var(--bg2);
+  border: 2px solid rgba(255,255,255,.15);
+  color: rgba(255,255,255,.6);
+  border-radius: 100px;
+  padding: 8px 20px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  transition: all .2s;
+}
+.grade-tab.active, .grade-tab:hover {
+  border-color: var(--accent, var(--sky));
+  color: var(--white);
+  background: rgba(255,255,255,.08);
+}
+.grade-tab.active { background: rgba(255,255,255,.12); }
 
-  .question-box {
-    background: var(--bg2);
-    border-radius: 24px;
-    padding: 28px 24px;
-    width: 100%;
-    max-width: 520px;
-    margin-bottom: 24px;
-    border: 2px solid rgba(255,255,255,0.08);
-    position: relative;
-    min-height: 130px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .question-grade-badge {
-    font-size: 10px;
-    font-weight: 700;
-    background: rgba(255,255,255,0.1);
-    border-radius: 100px;
-    padding: 3px 12px;
-    margin-bottom: 14px;
-    display: inline-block;
-    letter-spacing: 1px;
-  }
-  .question-text {
-    font-size: clamp(16px, 4vw, 20px);
-    font-weight: 700;
-    line-height: 1.6;
-    color: var(--white);
-  }
+.units-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 560px;
+}
+.unit-card {
+  background: var(--bg2);
+  border: 2px solid rgba(255,255,255,.08);
+  border-radius: 16px;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: all .22s;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.unit-card:hover { border-color: var(--accent, var(--sky)); background: var(--bg3); transform: translateX(4px); }
+.unit-perf {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.06);
+  border: 2px solid rgba(255,255,255,.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 10px;
+  gap: 1px;
+}
+.unit-perf.good { border-color: var(--mint); }
+.unit-perf.mid { border-color: var(--yellow); }
+.unit-perf.bad { border-color: var(--coral); }
+.unit-perf.none { border-color: rgba(255,255,255,.15); }
+.unit-perf-pct { font-size: 13px; font-weight: 900; font-family: 'Kaisei Decol', serif; }
+.unit-perf.good .unit-perf-pct { color: var(--mint); }
+.unit-perf.mid .unit-perf-pct { color: var(--yellow); }
+.unit-perf.bad .unit-perf-pct { color: var(--coral); }
+.unit-info { flex: 1; }
+.unit-name { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+.unit-attempts { font-size: 11px; color: rgba(240,238,255,.5); }
+.unit-arrow { font-size: 18px; opacity: .4; }
+.unit-card:hover .unit-arrow { opacity: .9; transform: translateX(3px); }
+.unit-arrow { transition: all .2s; }
 
-  .choices-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    width: 100%;
-    max-width: 520px;
-    margin-bottom: 24px;
-  }
-  .choice-btn {
-    background: var(--bg2);
-    border: 2px solid rgba(255,255,255,0.12);
-    border-radius: 16px;
-    padding: 18px 14px;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: center;
-    color: var(--white);
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    position: relative;
-    overflow: hidden;
-  }
-  .choice-btn:hover:not(:disabled) {
-    border-color: rgba(255,255,255,0.4);
-    background: rgba(255,255,255,0.08);
-    transform: translateY(-2px);
-  }
-  .choice-btn:disabled { cursor: default; }
-  .choice-btn.correct {
-    background: rgba(107,203,119,0.25);
-    border-color: var(--mint);
-    color: var(--mint);
-    animation: correctPulse 0.5s ease;
-  }
-  .choice-btn.wrong {
-    background: rgba(255,107,107,0.2);
-    border-color: var(--coral);
-    color: var(--coral);
-    animation: shake 0.4s ease;
-  }
-  .choice-letter {
-    position: absolute;
-    top: 8px;
-    left: 12px;
-    font-size: 10px;
-    opacity: 0.5;
-    font-weight: 900;
-  }
+/* ── quiz screen ── */
+.quiz-wrap { width: 100%; max-width: 540px; }
+.quiz-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.quiz-tag { font-size: 12px; font-weight: 700; letter-spacing: 1px; opacity: .8; flex: 1; }
+.quiz-prog-wrap { background: rgba(255,255,255,.1); border-radius: 100px; height: 7px; margin-top: 5px; }
+.quiz-prog-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--sky), var(--pink)); transition: width .4s ease; }
+.quiz-counter { font-size: 22px; font-weight: 900; font-family: 'Kaisei Decol', serif; white-space: nowrap; }
+.quiz-counter span { font-size: 13px; font-weight: 400; opacity: .6; }
 
-  .feedback-area {
-    width: 100%;
-    max-width: 520px;
-    min-height: 70px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 16px;
-    padding: 16px 20px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    margin-bottom: 20px;
-  }
-  .feedback-area.show { opacity: 1; }
-  .feedback-emoji { font-size: 32px; flex-shrink: 0; }
-  .feedback-text { font-size: 14px; line-height: 1.5; }
-  .feedback-text strong { display: block; font-size: 16px; margin-bottom: 4px; }
+.qbox {
+  background: var(--bg2);
+  border: 2px solid rgba(255,255,255,.08);
+  border-radius: 22px;
+  padding: 26px 22px;
+  margin-bottom: 20px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.q-badge { font-size: 10px; font-weight: 700; background: rgba(255,255,255,.1); border-radius: 100px; padding: 3px 12px; display: inline-block; margin-bottom: 12px; letter-spacing: 1px; }
+.q-text { font-size: clamp(15px, 4vw, 19px); font-weight: 700; line-height: 1.65; }
 
-  .next-btn {
-    background: linear-gradient(135deg, var(--sky), var(--purple));
-    border: none;
-    color: white;
-    border-radius: 100px;
-    padding: 16px 48px;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 16px;
-    font-weight: 900;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 6px 25px rgba(77,150,255,0.35);
-    display: none;
-  }
-  .next-btn:hover { transform: scale(1.05); box-shadow: 0 10px 35px rgba(77,150,255,0.5); }
-  .next-btn.show { display: block; }
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.choice {
+  background: var(--bg2);
+  border: 2px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  padding: 16px 12px;
+  cursor: pointer;
+  text-align: center;
+  color: var(--white);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  transition: all .2s;
+  position: relative;
+  overflow: hidden;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.choice:hover:not(:disabled) { border-color: rgba(255,255,255,.4); transform: translateY(-2px); background: var(--bg3); }
+.choice:disabled { cursor: default; }
+.choice.correct { background: rgba(107,203,119,.2); border-color: var(--mint); color: var(--mint); animation: pop .4s ease; }
+.choice.wrong { background: rgba(255,107,107,.18); border-color: var(--coral); color: var(--coral); animation: shake .35s ease; }
+.choice-letter { position: absolute; top: 7px; left: 10px; font-size: 9px; opacity: .45; font-weight: 900; }
 
-  /* === Result Screen === */
-  #result-screen {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-    animation: fadeIn 0.6s ease;
-    text-align: center;
-  }
-  .result-rank {
-    font-size: 90px;
-    margin-bottom: 10px;
-    animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-  .result-grade {
-    font-family: 'Kaisei Decol', serif;
-    font-size: 40px;
-    font-weight: 700;
-    background: linear-gradient(135deg, var(--yellow), var(--pink));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 8px;
-  }
-  .result-message { font-size: 16px; color: rgba(240,238,255,0.7); margin-bottom: 32px; }
-  .result-score-box {
-    background: var(--bg2);
-    border-radius: 24px;
-    padding: 24px 40px;
-    margin-bottom: 32px;
-    border: 2px solid rgba(255,255,255,0.1);
-    min-width: 250px;
-  }
-  .result-score-num {
-    font-size: 60px;
-    font-weight: 900;
-    font-family: 'Kaisei Decol', serif;
-    color: var(--yellow);
-    line-height: 1;
-  }
-  .result-score-num span { font-size: 24px; color: rgba(240,238,255,0.5); }
-  .result-score-label { font-size: 13px; opacity: 0.6; margin-top: 6px; }
-  .result-accuracy {
-    font-size: 18px;
-    font-weight: 700;
-    margin-top: 12px;
-  }
+@keyframes pop { 0% { transform:scale(1); } 40% { transform:scale(1.05); } 100% { transform:scale(1); } }
+@keyframes shake { 0%,100%{transform:translateX(0);} 20%{transform:translateX(-7px);} 40%{transform:translateX(7px);} 60%{transform:translateX(-5px);} 80%{transform:translateX(5px);} }
 
-  .result-actions {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .btn-retry, .btn-home {
-    border-radius: 100px;
-    padding: 14px 32px;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: none;
-  }
-  .btn-retry {
-    background: linear-gradient(135deg, var(--coral), #ff4757);
-    color: white;
-    box-shadow: 0 6px 20px rgba(255,107,107,0.35);
-  }
-  .btn-retry:hover { transform: scale(1.06); }
-  .btn-home {
-    background: rgba(255,255,255,0.1);
-    color: var(--white);
-    border: 2px solid rgba(255,255,255,0.2);
-  }
-  .btn-home:hover { background: rgba(255,255,255,0.15); transform: scale(1.04); }
+.feedback {
+  background: rgba(255,255,255,.05);
+  border-radius: 14px;
+  padding: 14px 18px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+  opacity: 0;
+  transition: opacity .3s;
+  min-height: 64px;
+}
+.feedback.show { opacity: 1; }
+.fb-emoji { font-size: 28px; flex-shrink: 0; }
+.fb-text strong { display: block; font-size: 15px; margin-bottom: 3px; }
+.fb-text span { font-size: 13px; color: rgba(240,238,255,.75); line-height: 1.5; }
 
-  /* Correct/wrong count */
-  .result-breakdown {
-    display: flex;
-    gap: 16px;
-    margin-top: 16px;
-  }
-  .breakdown-pill {
-    flex: 1;
-    background: rgba(255,255,255,0.05);
-    border-radius: 12px;
-    padding: 12px;
-    font-size: 13px;
-  }
-  .breakdown-pill .count { font-size: 26px; font-weight: 900; font-family: 'Kaisei Decol', serif; display: block; }
-  .breakdown-pill.correct-pill .count { color: var(--mint); }
-  .breakdown-pill.wrong-pill .count { color: var(--coral); }
+.next-btn {
+  display: none;
+  background: linear-gradient(135deg, var(--sky), var(--purple));
+  border: none;
+  color: white;
+  border-radius: 100px;
+  padding: 16px 48px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all .2s cubic-bezier(.175,.885,.32,1.275);
+  box-shadow: 0 6px 25px rgba(77,150,255,.35);
+  width: 100%;
+}
+.next-btn:hover { transform: scale(1.03); }
+.next-btn.show { display: block; }
 
-  /* === Overlay feedback === */
-  .big-feedback {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    font-size: 90px;
-    pointer-events: none;
-    z-index: 100;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
-    opacity: 0;
-  }
-  .big-feedback.show {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-  }
-  .big-feedback.hide {
-    transform: translate(-50%, -50%) scale(2);
-    opacity: 0;
-  }
+/* ── loading screen ── */
+#loading-screen .page-wrap { justify-content: center; text-align: center; }
+.loading-ring {
+  width: 80px; height: 80px;
+  border: 4px solid rgba(255,255,255,.1);
+  border-top-color: var(--sky);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 24px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-msg { font-size: 16px; color: rgba(240,238,255,.7); margin-bottom: 8px; }
+.loading-sub { font-size: 12px; color: rgba(240,238,255,.4); }
+.loading-dots::after {
+  content: '';
+  animation: dots 1.5s steps(4, end) infinite;
+}
+@keyframes dots {
+  0%   { content: ''; }
+  25%  { content: '.'; }
+  50%  { content: '..'; }
+  75%  { content: '...'; }
+  100% { content: ''; }
+}
 
-  /* === Animations === */
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
-  }
-  @keyframes correctPulse {
-    0% { transform: scale(1); }
-    30% { transform: scale(1.06); }
-    100% { transform: scale(1); }
-  }
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    20% { transform: translateX(-8px); }
-    40% { transform: translateX(8px); }
-    60% { transform: translateX(-6px); }
-    80% { transform: translateX(6px); }
-  }
-  @keyframes popIn {
-    0% { transform: scale(0) rotate(-20deg); }
-    60% { transform: scale(1.2) rotate(5deg); }
-    100% { transform: scale(1) rotate(0deg); }
-  }
+/* ── result screen ── */
+.result-rank { font-size: 88px; text-align: center; margin-bottom: 8px; animation: popIn .6s cubic-bezier(.175,.885,.32,1.275); }
+@keyframes popIn { 0%{transform:scale(0) rotate(-20deg);} 60%{transform:scale(1.2) rotate(5deg);} 100%{transform:scale(1) rotate(0);} }
+.result-grade {
+  font-family: 'Kaisei Decol', serif;
+  font-size: 36px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--yellow), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: center;
+  margin-bottom: 6px;
+}
+.result-msg { font-size: 15px; color: rgba(240,238,255,.7); text-align: center; margin-bottom: 28px; }
+.result-box {
+  background: var(--bg2);
+  border: 2px solid rgba(255,255,255,.1);
+  border-radius: 22px;
+  padding: 24px 32px;
+  margin-bottom: 24px;
+  text-align: center;
+  width: 100%;
+  max-width: 380px;
+}
+.result-score { font-size: 64px; font-weight: 900; font-family: 'Kaisei Decol', serif; color: var(--yellow); line-height: 1; }
+.result-score span { font-size: 22px; color: rgba(240,238,255,.5); }
+.result-acc { font-size: 18px; font-weight: 700; margin-top: 10px; }
+.result-split { display: flex; gap: 12px; margin-top: 14px; }
+.result-split div { flex: 1; background: rgba(255,255,255,.05); border-radius: 10px; padding: 10px; font-size: 12px; }
+.result-split div b { font-size: 24px; font-family: 'Kaisei Decol', serif; display: block; }
+.result-split .ok b { color: var(--mint); }
+.result-split .ng b { color: var(--coral); }
+.result-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 380px; }
+.btn-retry {
+  flex: 1;
+  background: linear-gradient(135deg, var(--coral), #ff4757);
+  border: none; color: white;
+  border-radius: 100px;
+  padding: 14px 20px;
+  font-family: inherit; font-size: 15px; font-weight: 700;
+  cursor: pointer;
+  transition: all .2s cubic-bezier(.175,.885,.32,1.275);
+  box-shadow: 0 6px 20px rgba(255,107,107,.3);
+}
+.btn-retry:hover { transform: scale(1.05); }
+.btn-home {
+  flex: 1;
+  background: rgba(255,255,255,.08);
+  border: 2px solid rgba(255,255,255,.18);
+  color: var(--white);
+  border-radius: 100px;
+  padding: 14px 20px;
+  font-family: inherit; font-size: 15px; font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-home:hover { background: rgba(255,255,255,.14); }
 
-  /* Mobile */
-  @media (max-width: 400px) {
-    .subject-grid { grid-template-columns: 1fr 1fr; }
-    .grade-grid { grid-template-columns: repeat(3, 1fr); }
-    .choices-grid { grid-template-columns: 1fr; }
-  }
+/* ── confetti ── */
+.confetti-wrap { position: fixed; inset: 0; pointer-events: none; z-index: 200; overflow: hidden; }
+.confetto { position: absolute; width: 10px; height: 10px; border-radius: 2px; top: -10px; animation: cfall 1.6s ease-in forwards; }
+@keyframes cfall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
 
-  .total-score-badge {
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    background: rgba(255,217,61,0.15);
-    border: 2px solid var(--yellow);
-    border-radius: 100px;
-    padding: 6px 16px;
-    font-size: 13px;
-    font-weight: 900;
-    color: var(--yellow);
-    z-index: 50;
-    display: none;
-  }
-  .total-score-badge.show { display: block; }
+/* ── big feedback overlay ── */
+.big-fb {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%,-50%) scale(0);
+  font-size: 88px; pointer-events: none; z-index: 100;
+  opacity: 0;
+  transition: transform .18s cubic-bezier(.175,.885,.32,1.275), opacity .25s;
+}
+.big-fb.show { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+.big-fb.hide { transform: translate(-50%,-50%) scale(2.5); opacity: 0; }
 
-  /* Confetti particles */
-  .confetti-wrap {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 200;
-    overflow: hidden;
-  }
-  .confetto {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
-    animation: confettiFall 1.5s ease-in forwards;
-    top: -10px;
-  }
-  @keyframes confettiFall {
-    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
-  }
+/* ── error toast ── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: rgba(255,107,107,.15);
+  border: 1.5px solid var(--coral);
+  border-radius: 14px;
+  padding: 12px 22px;
+  font-size: 13px;
+  z-index: 300;
+  display: none;
+  max-width: 90vw;
+  text-align: center;
+}
+.toast.show { display: block; animation: fadeUp .3s ease; }
+
+/* ── responsive ── */
+@media (max-width: 400px) {
+  .choices { grid-template-columns: 1fr; }
+  .subject-grid { grid-template-columns: 1fr; }
+  .subj-card.english { grid-column: 1; }
+}
 </style>
 </head>
 <body>
 
-<!-- Big feedback overlay -->
-<div class="big-feedback" id="bigFeedback"></div>
-<!-- Confetti -->
-<div class="confetti-wrap" id="confettiWrap"></div>
-<!-- Total score badge -->
-<div class="total-score-badge" id="totalBadge">🏆 <span id="totalScoreDisplay">0</span>点</div>
-
-<!-- ==================== TITLE SCREEN ==================== -->
-<div class="screen active" id="title-screen">
-  <span class="mascot">🎓</span>
-  <div class="title-badge">ELEMENTARY SCHOOL QUIZ</div>
-  <h1 class="title-main">小学校6年間<br>総復習クイズ！</h1>
-  <p class="title-sub">好きな科目を選んでスタート！全 5 科目対応</p>
-
-  <div class="score-bar">
-    <div class="score-pill">合計スコア <span id="totalScore">0</span>点</div>
-    <div class="score-pill">正答率 <span id="correctRate">-</span></div>
-  </div>
-
-  <div class="subject-grid">
-    <div class="subject-card math" onclick="selectSubject('math')">
-      <span class="subject-emoji">🔢</span>
-      <span class="subject-name">算　数</span>
-      <span class="subject-desc">計算・図形・割合など</span>
-    </div>
-    <div class="subject-card japanese" onclick="selectSubject('japanese')">
-      <span class="subject-emoji">📖</span>
-      <span class="subject-name">国　語</span>
-      <span class="subject-desc">漢字・文法・文学など</span>
-    </div>
-    <div class="subject-card science" onclick="selectSubject('science')">
-      <span class="subject-emoji">🔬</span>
-      <span class="subject-name">理　科</span>
-      <span class="subject-desc">植物・天体・化学など</span>
-    </div>
-    <div class="subject-card social" onclick="selectSubject('social')">
-      <span class="subject-emoji">🗾</span>
-      <span class="subject-name">社　会</span>
-      <span class="subject-desc">地理・歴史・公民など</span>
-    </div>
-    <div class="subject-card english" onclick="selectSubject('english')">
-      <span class="subject-emoji">🌍</span>
-      <span class="subject-name">英　語</span>
-      <span class="subject-desc">単語・フレーズ・会話など</span>
+<!-- ================ API KEY SCREEN ================ -->
+<div class="screen active" id="key-screen">
+  <div class="page-wrap">
+    <div class="key-card">
+      <div class="key-icon">🤖</div>
+      <h2 class="key-title">AIクイズをはじめよう！</h2>
+      <p class="key-desc">Claude AIが君だけの問題を作ってくれるよ！<br>AnthropicのAPIキーを入れてね。</p>
+      <input class="key-input" id="apiKeyInput" type="password" placeholder="sk-ant-api..." spellcheck="false" />
+      <button class="key-save-btn" onclick="saveKey()">✨ はじめる！</button>
+      <p class="key-notice">🔒 APIキーはこのブラウザだけに保存されます<br>外に送られることはありません</p>
     </div>
   </div>
 </div>
 
-<!-- ==================== GRADE SCREEN ==================== -->
-<div class="screen" id="grade-screen">
-  <div style="font-size:60px;text-align:center;margin-bottom:20px" id="gradeEmoji">🔢</div>
-  <h2 class="screen-title" id="gradeTitle">算数をえらびました！</h2>
-  <p class="screen-hint">何年生の問題にちょうせんする？</p>
-  <div class="grade-grid" id="gradeGrid">
-    <button class="grade-btn" onclick="selectGrade(1)"><span class="grade-num">1</span><span class="grade-label">年生</span></button>
-    <button class="grade-btn" onclick="selectGrade(2)"><span class="grade-num">2</span><span class="grade-label">年生</span></button>
-    <button class="grade-btn" onclick="selectGrade(3)"><span class="grade-num">3</span><span class="grade-label">年生</span></button>
-    <button class="grade-btn" onclick="selectGrade(4)"><span class="grade-num">4</span><span class="grade-label">年生</span></button>
-    <button class="grade-btn" onclick="selectGrade(5)"><span class="grade-num">5</span><span class="grade-label">年生</span></button>
-    <button class="grade-btn" onclick="selectGrade(6)"><span class="grade-num">6</span><span class="grade-label">年生</span></button>
-  </div>
-  <button class="back-btn" onclick="showScreen('title-screen')">← もどる</button>
-</div>
+<!-- ================ HOME SCREEN ================ -->
+<div class="screen" id="home-screen">
+  <div class="page-wrap">
+    <span class="mascot">🎓</span>
+    <h1 class="home-title">AI小学校<br>総復習クイズ！</h1>
+    <p class="page-sub">科目と単元を選んで、AIが問題を作ってくれるよ✨</p>
+    <div class="stats-row" id="statsRow">
+      <div class="stat-pill">合計問題<b id="statTotal">0</b></div>
+      <div class="stat-pill">正解率<b id="statRate">-</b></div>
+      <div class="stat-pill">こなした単元<b id="statUnits">0</b></div>
+    </div>
 
-<!-- ==================== QUIZ SCREEN ==================== -->
-<div class="screen" id="quiz-screen">
-  <div class="quiz-header">
-    <div class="quiz-info">
-      <div class="quiz-subject-tag" id="quizSubjectTag">算数 ・ 3年生</div>
-      <div class="progress-wrap">
-        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    <!-- recommendations -->
+    <div class="rec-box" id="recBox" style="display:none">
+      <div class="rec-title">📌 これを復習しよう！</div>
+      <div class="rec-items" id="recItems"></div>
+    </div>
+
+    <div class="subject-grid">
+      <div class="subj-card math" onclick="goSubject('math')">
+        <span class="subj-emoji">🔢</span>
+        <span class="subj-name">算　数</span>
+        <span class="subj-meta">1〜6年生 · 6カテゴリ</span>
+      </div>
+      <div class="subj-card japanese" onclick="goSubject('japanese')">
+        <span class="subj-emoji">📖</span>
+        <span class="subj-name">国　語</span>
+        <span class="subj-meta">1〜6年生 · 6カテゴリ</span>
+      </div>
+      <div class="subj-card science" onclick="goSubject('science')">
+        <span class="subj-emoji">🔬</span>
+        <span class="subj-name">理　科</span>
+        <span class="subj-meta">3〜6年生 · 4カテゴリ</span>
+      </div>
+      <div class="subj-card social" onclick="goSubject('social')">
+        <span class="subj-emoji">🗾</span>
+        <span class="subj-name">社　会</span>
+        <span class="subj-meta">3〜6年生 · 4カテゴリ</span>
+      </div>
+      <div class="subj-card english" onclick="goSubject('english')">
+        <span class="subj-emoji">🌍</span>
+        <span class="subj-name">英　語</span>
+        <span class="subj-meta">5〜6年生 · 2カテゴリ</span>
       </div>
     </div>
-    <div class="question-counter" id="qCounter">1 <span>/ 5</span></div>
+    <button class="back-btn" style="align-self:center" onclick="showScreen('key-screen')">⚙ APIキーを変える</button>
   </div>
-
-  <div class="question-box">
-    <span class="question-grade-badge" id="qGradeBadge">🌟 3年生レベル</span>
-    <div class="question-text" id="questionText">問題がここに表示されます</div>
-  </div>
-
-  <div class="choices-grid" id="choicesGrid"></div>
-
-  <div class="feedback-area" id="feedbackArea">
-    <div class="feedback-emoji" id="feedbackEmoji">✨</div>
-    <div class="feedback-text">
-      <strong id="feedbackTitle"></strong>
-      <span id="feedbackDetail"></span>
-    </div>
-  </div>
-
-  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">つぎの問題へ →</button>
 </div>
 
-<!-- ==================== RESULT SCREEN ==================== -->
+<!-- ================ SUBJECT SCREEN ================ -->
+<div class="screen" id="subject-screen">
+  <div class="page-wrap">
+    <button class="back-btn" onclick="showScreen('home-screen')">← もどる</button>
+    <div id="subjIcon" style="font-size:56px;text-align:center;margin-bottom:12px"></div>
+    <h2 class="page-title" id="subjTitle"></h2>
+    <p class="page-sub">学年を選んで、単元をタップ！</p>
+    <div class="grade-tabs" id="gradeTabs"></div>
+    <div class="units-grid" id="unitsGrid"></div>
+  </div>
+</div>
+
+<!-- ================ LOADING SCREEN ================ -->
+<div class="screen" id="loading-screen">
+  <div class="page-wrap">
+    <div class="loading-ring"></div>
+    <p class="loading-msg">AIが問題を作っています<span class="loading-dots"></span></p>
+    <p class="loading-sub" id="loadingSub">少し待ってね！</p>
+  </div>
+</div>
+
+<!-- ================ QUIZ SCREEN ================ -->
+<div class="screen" id="quiz-screen">
+  <div class="page-wrap">
+    <div class="quiz-wrap">
+      <div class="quiz-header">
+        <div style="flex:1">
+          <div class="quiz-tag" id="quizTag"></div>
+          <div class="quiz-prog-wrap"><div class="quiz-prog-fill" id="progFill" style="width:0%"></div></div>
+        </div>
+        <div class="quiz-counter" id="qCounter">1 <span>/ 5</span></div>
+      </div>
+
+      <div class="qbox">
+        <span class="q-badge" id="qBadge"></span>
+        <div class="q-text" id="qText"></div>
+      </div>
+
+      <div class="choices" id="choicesWrap"></div>
+
+      <div class="feedback" id="feedbackBox">
+        <span class="fb-emoji" id="fbEmoji"></span>
+        <div class="fb-text"><strong id="fbTitle"></strong><span id="fbDetail"></span></div>
+      </div>
+
+      <button class="next-btn" id="nextBtn" onclick="nextQ()">つぎへ →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================ RESULT SCREEN ================ -->
 <div class="screen" id="result-screen">
-  <div class="result-rank" id="resultRank">🏆</div>
-  <div class="result-grade" id="resultGrade">すごい！</div>
-  <p class="result-message" id="resultMessage">全問正解だ！天才！</p>
-
-  <div class="result-score-box">
-    <div class="result-score-num" id="resultScore">0 <span>点</span></div>
-    <div class="result-score-label">今回のスコア</div>
-    <div class="result-breakdown">
-      <div class="breakdown-pill correct-pill"><span class="count" id="correctCount">0</span>せいかい</div>
-      <div class="breakdown-pill wrong-pill"><span class="count" id="wrongCount">0</span>まちがい</div>
+  <div class="page-wrap">
+    <div class="result-rank" id="resultRank">🏆</div>
+    <div class="result-grade" id="resultGrade">すごい！</div>
+    <p class="result-msg" id="resultMsg"></p>
+    <div class="result-box">
+      <div class="result-score" id="resultScore">0 <span>点</span></div>
+      <div class="result-acc" id="resultAcc"></div>
+      <div class="result-split">
+        <div class="ok"><b id="resCorrect">0</b>せいかい</div>
+        <div class="ng"><b id="resWrong">0</b>まちがい</div>
+      </div>
     </div>
-    <div class="result-accuracy" id="resultAccuracy" style="color: var(--yellow); margin-top:14px;"></div>
-  </div>
-
-  <div class="result-actions">
-    <button class="btn-retry" onclick="retryQuiz()">🔁 もう一度</button>
-    <button class="btn-home" onclick="showScreen('title-screen')">🏠 ホームへ</button>
+    <div class="result-actions">
+      <button class="btn-retry" onclick="retryQuiz()">🔁 もう一度</button>
+      <button class="btn-home" onclick="showScreen('home-screen');refreshHome()">🏠 ホームへ</button>
+    </div>
   </div>
 </div>
+
+<!-- overlays -->
+<div class="confetti-wrap" id="confettiWrap"></div>
+<div class="big-fb" id="bigFb"></div>
+<div class="toast" id="toast"></div>
 
 <script>
-// ==================== DATA ====================
-const SUBJECTS = {
-  math: { name: '算数', emoji: '🔢', color: 'var(--sky)', accentCss: '--accent: #4d96ff' },
-  japanese: { name: '国語', emoji: '📖', color: 'var(--coral)', accentCss: '--accent: #ff6b6b' },
-  science: { name: '理科', emoji: '🔬', color: 'var(--mint)', accentCss: '--accent: #6bcb77' },
-  social: { name: '社会', emoji: '🗾', color: 'var(--yellow)', accentCss: '--accent: #ffd93d' },
-  english: { name: '英語', emoji: '🌍', color: 'var(--pink)', accentCss: '--accent: #ff87c3' },
+// ===================== CURRICULUM DATA =====================
+const SUBJ = {
+  math:     { name: '算数', emoji: '🔢', color: '#4d96ff',  cls: 'math',     grades: [1,2,3,4,5,6] },
+  japanese: { name: '国語', emoji: '📖', color: '#ff6b6b',  cls: 'japanese', grades: [1,2,3,4,5,6] },
+  science:  { name: '理科', emoji: '🔬', color: '#6bcb77',  cls: 'science',  grades: [3,4,5,6] },
+  social:   { name: '社会', emoji: '🗾', color: '#ffd93d',  cls: 'social',   grades: [3,4,5,6] },
+  english:  { name: '英語', emoji: '🌍', color: '#ff87c3',  cls: 'english',  grades: [5,6] },
 };
 
-const QUESTIONS = {
+const UNITS = {
   math: {
-    1: [
-      { q: '3 ＋ 5 はいくつ？', choices: ['6', '7', '8', '9'], answer: 2, hint: '3のあとに5つ数えると8になるよ！' },
-      { q: '10 ー 4 はいくつ？', choices: ['4', '5', '6', '7'], answer: 2, hint: '10から4つ引くと6だよ！' },
-      { q: 'えんぴつが9本あります。2本つかいました。のこりは何本？', choices: ['5本', '6本', '7本', '8本'], answer: 2, hint: '9 ー 2 ＝ 7 だよ！' },
-      { q: '2 ＋ 8 ＋ 3 はいくつ？', choices: ['11', '12', '13', '14'], answer: 2, hint: '2＋8＝10、10＋3＝13だよ！' },
-      { q: '15 ー 7 はいくつ？', choices: ['6', '7', '8', '9'], answer: 2, hint: '15から7を引くと8になるよ！' },
-    ],
-    2: [
-      { q: '7 × 8 はいくつ？', choices: ['54', '55', '56', '57'], answer: 2, hint: '7×8は九九で「しちはごじゅうろく」！56だよ！' },
-      { q: '4 × 6 はいくつ？', choices: ['20', '22', '24', '26'], answer: 2, hint: '4×6は「しろくにじゅうし」！24だよ！' },
-      { q: '3 × 9 はいくつ？', choices: ['24', '25', '27', '30'], answer: 2, hint: '3×9は「さんくにじゅうしち」！27だよ！' },
-      { q: '8 × 8 はいくつ？', choices: ['60', '62', '64', '66'], answer: 2, hint: '8×8は「はちはちろくじゅうし」！64だよ！' },
-      { q: '6 × 7 はいくつ？', choices: ['38', '40', '42', '44'], answer: 2, hint: '6×7は「ろくしちしじゅうに」！42だよ！' },
-    ],
-    3: [
-      { q: '24 ÷ 6 はいくつ？', choices: ['3', '4', '5', '6'], answer: 1, hint: '6×4＝24だから24÷6＝4だよ！' },
-      { q: '1/4 ＋ 2/4 はいくつ？', choices: ['1/2', '2/4', '3/4', '1'], answer: 2, hint: '分母が同じときは分子どうしを足すよ！1＋2＝3で3/4！' },
-      { q: '35 ÷ 7 はいくつ？', choices: ['4', '5', '6', '7'], answer: 1, hint: '7×5＝35だから35÷7＝5だよ！' },
-      { q: '56 ÷ 8 はいくつ？', choices: ['5', '6', '7', '8'], answer: 2, hint: '8×7＝56だから56÷8＝7だよ！' },
-      { q: '3/5 ＋ 1/5 はいくつ？', choices: ['2/5', '3/5', '4/5', '1'], answer: 2, hint: '3＋1＝4で4/5だよ！' },
-    ],
-    4: [
-      { q: '0.4 ＋ 0.8 はいくつ？', choices: ['0.12', '1.0', '1.2', '1.4'], answer: 2, hint: '0.4＋0.8は0.1が12個だから1.2だよ！' },
-      { q: 'たて6cm、よこ7cmの長方形の面積は？', choices: ['26cm²', '36cm²', '42cm²', '48cm²'], answer: 2, hint: '長方形の面積はたて×よこ！6×7＝42cm²だよ！' },
-      { q: '1辺が5cmの正方形の面積は？', choices: ['10cm²', '20cm²', '25cm²', '30cm²'], answer: 2, hint: '正方形の面積は1辺×1辺！5×5＝25cm²だよ！' },
-      { q: '2.5 × 4 はいくつ？', choices: ['8', '9', '10', '11'], answer: 2, hint: '2.5×4は2×4＋0.5×4＝8＋2＝10だよ！' },
-      { q: 'たて8cm、よこ9cmの長方形の面積は？', choices: ['34cm²', '64cm²', '72cm²', '80cm²'], answer: 2, hint: '8×9＝72cm²だよ！' },
-    ],
-    5: [
-      { q: '60の25%はいくつ？', choices: ['12', '14', '15', '25'], answer: 2, hint: '60×0.25＝15！25%は1/4だから60÷4でも求められるよ！' },
-      { q: '時速40kmで3時間走ると何km？', choices: ['80km', '100km', '120km', '140km'], answer: 2, hint: '速さ×時間＝きょり！40×3＝120kmだよ！' },
-      { q: '2/3 × 3/4 はいくつ？', choices: ['1/4', '1/2', '2/3', '6/7'], answer: 1, hint: '分数のかけ算は分子どうし・分母どうし！2×3÷(3×4)＝6/12＝1/2だよ！' },
-      { q: '80円の商品を30%引きで買うといくら？', choices: ['48円', '50円', '56円', '60円'], answer: 2, hint: '30%引き→70%の値段！80×0.7＝56円だよ！' },
-      { q: '時速60kmで90分走ると何km？', choices: ['60km', '75km', '90km', '100km'], answer: 2, hint: '90分＝1.5時間！60×1.5＝90kmだよ！' },
-    ],
-    6: [
-      { q: '半径4cmの円の面積は？（円周率＝3.14）', choices: ['25.12cm²', '50.24cm²', '75.36cm²', '100.48cm²'], answer: 1, hint: '円の面積は半径×半径×円周率！4×4×3.14＝50.24cm²だよ！' },
-      { q: '3:4 ＝ 9:□ の□はいくつ？', choices: ['8', '10', '12', '16'], answer: 2, hint: '3が3倍で9になったから4も3倍で12だよ！' },
-      { q: '(4 ＋ 6) × 3 ÷ 2 はいくつ？', choices: ['10', '12', '15', '18'], answer: 2, hint: '()を先に！(4＋6)＝10、10×3＝30、30÷2＝15だよ！' },
-      { q: '直径10cmの円の円周の長さは？（円周率＝3.14）', choices: ['15.7cm', '21.4cm', '31.4cm', '41.4cm'], answer: 2, hint: '円周＝直径×円周率！10×3.14＝31.4cmだよ！' },
-      { q: '2:3＝□:12 の□はいくつ？', choices: ['4', '6', '8', '10'], answer: 2, hint: '3が4倍で12になったから2も4倍で8だよ！' },
-    ],
+    1: ['たし算・ひき算', '10までの数のしくみ', 'いろいろなかたち（形）', '時計の読み方'],
+    2: ['九九（かけ算）', '2けたのたし算・ひき算', '長さとかさ（単位）', '三角形と四角形'],
+    3: ['わり算', '小数入門', '分数入門', '三角形の種類', '長さ・重さ・時間'],
+    4: ['大きな数（億・兆）', '小数のかけ算・わり算', '分数の計算', '面積（長方形・正方形）', '角度・折れ線グラフ'],
+    5: ['割合・百分率・歩合', '速さ・時間・距離', '分数のかけ算・わり算', '三角形・四角形の面積', '体積', '平均とデータ'],
+    6: ['比', '円の面積', '角柱・円柱の体積', '比例と反比例', '場合の数', 'データ活用（統計）'],
   },
   japanese: {
-    1: [
-      { q: '「いぬ」を漢字で書くとどれ？', choices: ['大', '太', '犬', '天'], answer: 2, hint: '「犬」だよ！右上に一つ点があるのが特徴！' },
-      { q: '「やま」を漢字で書くとどれ？', choices: ['出', '山', '土', '口'], answer: 1, hint: '「山」だよ！山の形をしているね！' },
-      { q: '「くるま」を漢字で書くとどれ？', choices: ['重', '車', '走', '道'], answer: 1, hint: '「車」だよ！タイヤが見えるような形だね！' },
-      { q: '「ひ」から始まる生き物は？', choices: ['たぬき', 'うさぎ', 'ひよこ', 'とら'], answer: 2, hint: '「ひよこ」だよ！かわいいね🐣' },
-      { q: '「水」の読み方はどれ？', choices: ['き', 'みず', 'ひ', 'かぜ'], answer: 1, hint: '「水（みず）」だよ！水の流れる形をしている漢字！' },
-    ],
-    2: [
-      { q: '「草」の読みはどれ？', choices: ['はな', 'くさ', 'き', 'もり'], answer: 1, hint: '「草（くさ）」だよ！草むらを想像してね🌿' },
-      { q: '「読む」の反対の言葉はどれ？', choices: ['見る', '話す', '書く', '聞く'], answer: 2, hint: '「読む（よむ）」の反対は「書く（かく）」だよ！' },
-      { q: '春・夏・秋・冬のことを何という？', choices: ['曜日', '月', '季節', '天気'], answer: 2, hint: '春・夏・秋・冬は「季節（きせつ）」だよ！' },
-      { q: '「明るい」の反対の言葉はどれ？', choices: ['楽しい', '暗い', '白い', '青い'], answer: 1, hint: '「明るい」の反対は「暗い（くらい）」だよ！' },
-      { q: '「鳥」は何と読む？', choices: ['さかな', 'とり', 'むし', 'けもの'], answer: 1, hint: '「鳥（とり）」だよ！空を飛ぶよね🐦' },
-    ],
-    3: [
-      { q: '「図書館」の読みはどれ？', choices: ['としょかん', 'ずしょかん', 'としょかい', 'ずかん'], answer: 0, hint: '「図書館（としょかん）」だよ！本がたくさんある場所！' },
-      { q: '「始まる」の正しい送り仮名はどれ？', choices: ['始る', 'はじまる', '始まる', '始じまる'], answer: 2, hint: '「始まる」だよ！漢字は「始」で、送り仮名は「まる」！' },
-      { q: '「日曜日」の読みはどれ？', choices: ['にちようび', 'ひようび', 'にちようにち', 'にちよう'], answer: 0, hint: '「日曜日（にちようび）」だよ！学校がお休みの日！' },
-      { q: '「注意」の読みはどれ？', choices: ['ちゅうに', 'ちゅうい', 'ちゅうたい', 'ちゅうか'], answer: 1, hint: '「注意（ちゅうい）」だよ！気をつけるという意味！' },
-      { q: '「全員」の意味はどれ？', choices: ['半分の人', '何人か', 'みんな全部', 'ひとり'], answer: 2, hint: '「全員（ぜんいん）」はみんな全部という意味だよ！' },
-    ],
-    4: [
-      { q: '「健康」の読みはどれ？', choices: ['けんこう', 'けんか', 'げんき', 'けんき'], answer: 0, hint: '「健康（けんこう）」だよ！体が元気な状態のことだね！' },
-      { q: '「観察」の意味はどれ？', choices: ['集めること', 'よく見て調べること', '書くこと', '話すこと'], answer: 1, hint: '「観察（かんさつ）」はよく見て調べることだよ！' },
-      { q: '「熟語」とはどんな言葉？', choices: ['ひらがなだけの言葉', '外国の言葉', '漢字2字以上の言葉', 'カタカナの言葉'], answer: 2, hint: '「熟語（じゅくご）」は漢字2字以上でできた言葉だよ！' },
-      { q: '「協力」の読みはどれ？', choices: ['きょうりょく', 'きょうか', 'きょうつう', 'きょうそう'], answer: 0, hint: '「協力（きょうりょく）」だよ！みんなで力を合わせること！' },
-      { q: '「便利」の「便」を使った別の言葉はどれ？', choices: ['便所', '便当', '便当', 'どれも正しい'], answer: 3, hint: '「便所（べんじょ）」も「弁当（べんとう）」も「便利（べんり）」も「便」を使うよ！' },
-    ],
-    5: [
-      { q: '「食べる」の尊敬語（そんけいご）はどれ？', choices: ['いただく', '食べられる', '召し上がる', '食べます'], answer: 2, hint: '「召し上がる（めしあがる）」が尊敬語だよ！「いただく」は謙譲語（けんじょうご）！' },
-      { q: '「花が咲いた」の主語はどれ？', choices: ['花が', '咲いた', 'が', '花'], answer: 0, hint: '主語（しゅご）は「〜が」「〜は」にあたる部分！「花が」だよ！' },
-      { q: '俳句は何音でできている？', choices: ['14音', '15音', '17音', '20音'], answer: 2, hint: '俳句は「5・7・5」の17音だよ！「古池や〜」もそう！' },
-      { q: '文の「述語」とはどれにあたる？', choices: ['〜を', '動きや状態を表す言葉', '〜の', '〜と'], answer: 1, hint: '述語（じゅつご）は動きや状態を表す言葉！「走る」「きれいだ」など！' },
-      { q: '「海・山・川」のような言葉の関係は？', choices: ['対義語', '同義語', '類義語', '慣用句'], answer: 2, hint: '「海・山・川」は意味が似ている「類義語（るいぎご）」的なグループ…ではなく、自然を表す言葉のグループだけど、似た意味を持つ言葉を「類義語」と言うよ！' },
-    ],
-    6: [
-      { q: '「万葉集（まんようしゅう）」はどの時代の歌集？', choices: ['平安時代', '奈良時代', '江戸時代', '鎌倉時代'], answer: 1, hint: '「万葉集」は奈良時代（ならじだい）の歌集だよ！日本最古の和歌集！' },
-      { q: '「蛇足（だそく）」の意味はどれ？', choices: ['大切なもの', '余計なもの', '不思議なもの', '必要なもの'], answer: 1, hint: '「蛇足」は余計なもの・余計なことという意味だよ！ヘビに足は必要ないから！' },
-      { q: '「枕草子（まくらのそうし）」を書いたのは誰？', choices: ['紫式部', '松尾芭蕉', '清少納言', '与謝野晶子'], answer: 2, hint: '「枕草子」は清少納言（せいしょうなごん）が書いたよ！「春はあけぼの」で有名！' },
-      { q: '「源氏物語（げんじものがたり）」を書いたのは？', choices: ['清少納言', '紫式部', '松尾芭蕉', '小野小町'], answer: 1, hint: '「源氏物語」は紫式部（むらさきしきぶ）が書いたよ！世界最古の長編小説とも言われる！' },
-      { q: '俳句で「季語（きご）」とは何？', choices: ['5音の言葉', '季節を表す言葉', '美しい言葉', '川や山の名前'], answer: 1, hint: '俳句では季節を表す「季語」を必ず入れるよ！「桜」は春、「ゆき」は冬など！' },
-    ],
+    1: ['ひらがな・書き方', 'カタカナ・書き方', '1年生の漢字（80字）', '文の組み立て・句読点'],
+    2: ['2年生の漢字（160字）', '主語と述語', '言葉のきまり（助詞）', '文章読解'],
+    3: ['3年生の漢字（200字）', '修飾語・接続語', 'ローマ字', '物語・説明文読解'],
+    4: ['4年生の漢字（200字）', '熟語の意味・組み立て', '慣用句・ことわざ', '説明文・詩の読解'],
+    5: ['5年生の漢字（185字）', '敬語（尊敬語・謙譲語・丁寧語）', '文学作品（枕草子・源氏物語など）', '詩・短歌・俳句'],
+    6: ['6年生の漢字（181字）', '古典入門（万葉集・竹取物語）', '故事成語・四字熟語', '文章読解・論述'],
   },
   science: {
-    3: [
-      { q: '植物が育つために必要なものは？', choices: ['水だけ', '日光だけ', '水・日光・土', '土だけ'], answer: 2, hint: '植物には水・日光・土（養分）の3つが必要だよ！' },
-      { q: '磁石がくっつくものはどれ？', choices: ['アルミ缶', 'プラスチック', 'スチール缶', '木'], answer: 2, hint: '磁石がくっつくのは「鉄」！スチール缶は鉄でできているよ！' },
-      { q: 'モンシロチョウの育ち方の順番は？', choices: ['卵→成虫→幼虫', '卵→さなぎ→幼虫→成虫', '卵→幼虫→さなぎ→成虫', '幼虫→卵→さなぎ→成虫'], answer: 2, hint: 'チョウは「卵→幼虫→さなぎ→成虫」の順で育つよ！完全変態だね！' },
-      { q: 'かげができるのはなぜ？', choices: ['光をはねかえすから', '光をさえぎるから', '暗いから', '冷たいから'], answer: 1, hint: 'かげは光をさえぎるとできるよ！光の反対側にできるね！' },
-      { q: 'ホウセンカの花が咲く季節は？', choices: ['春', '夏', '秋', '冬'], answer: 1, hint: 'ホウセンカは夏に花が咲くよ！種から育てる植物だね！' },
-    ],
-    4: [
-      { q: '夏と冬で気温が高いのはどちら？', choices: ['夏', '冬', '同じ', '春'], answer: 0, hint: '夏の方が気温が高いよ！日本では夏は30℃以上になることも！' },
-      { q: '月の形が変わって見えるのはなぜ？', choices: ['月が光るから', '地球が動かないから', '月が地球の周りを回るから', '雲があるから'], answer: 2, hint: '月が地球の周りを約1ヶ月かけて回るから、見える形（月相）が変わるんだよ！' },
-      { q: '水を冷やして0℃以下になると？', choices: ['水蒸気になる', '氷になる', '変わらない', '熱くなる'], answer: 1, hint: '水は0℃以下になると氷になるよ！逆に100℃で沸騰して水蒸気になる！' },
-      { q: '電気を通すものはどれ？', choices: ['ゴム', '木', '銅線（どうせん）', 'ガラス'], answer: 2, hint: '銅（どう）は電気をよく通す金属だよ！電線に使われているね！' },
-      { q: '骨と骨がつながっている部分を何という？', choices: ['筋肉', '関節', '神経', '皮ふ'], answer: 1, hint: '骨と骨がつながっている部分は「関節（かんせつ）」だよ！ひじやひざもそう！' },
-    ],
-    5: [
-      { q: '花粉を運ぶ昆虫といえば？', choices: ['ゴキブリ', 'ミツバチ', 'カブトムシ', 'セミ'], answer: 1, hint: 'ミツバチが花の蜜を集めながら花粉を運んでくれるよ！花が実を結ぶのに大切！' },
-      { q: '食塩水を蒸発させると何が残る？', choices: ['水', '食塩', '何も残らない', '砂'], answer: 1, hint: '水は蒸発して消えるけど、食塩は残るよ！これで塩ができるんだね！' },
-      { q: '植物が光を使って養分を作ることを何という？', choices: ['呼吸', '蒸散', '光合成', '消化'], answer: 2, hint: '植物が光・水・二酸化炭素を使って養分（でんぷん）を作るのを「光合成（こうごうせい）」という！' },
-      { q: 'メダカのオスとメスの見分け方は？', choices: ['大きさで見分ける', 'ひれの形で見分ける', '色で見分ける', '見分けられない'], answer: 1, hint: 'メダカはひれの形で見分けるよ！オスは背びれに切れ込みがある！' },
-      { q: '天気の変化は主にどの方向に進む？', choices: ['東から西', '南から北', '西から東', '北から南'], answer: 2, hint: '日本の天気は主に西から東へ進むよ！だから天気予報が当たるんだね！' },
-    ],
-    6: [
-      { q: '食べ物を消化する順番（口の次）は？', choices: ['胃', '食道', '小腸', '大腸'], answer: 1, hint: '口→食道（しょくどう）→胃→小腸→大腸の順だよ！食道は飲み込んだものを胃に運ぶ管！' },
-      { q: 'てこで重いものを軽く持ち上げるには？', choices: ['支点から力点を近くする', '支点から力点を遠くする', '支点をなくす', '作用点を遠くする'], answer: 1, hint: '力点を支点から遠くすると少ない力で持ち上げられるよ！シーソーと同じ原理！' },
-      { q: '月は地球のまわりを約何日で1周する？', choices: ['約7日', '約15日', '約30日', '約365日'], answer: 2, hint: '月は約30日（正確には約27.3日）で地球を1周するよ！だから月のカレンダーが1ヶ月なんだね！' },
-      { q: '人間の体の中で消化・吸収をするもっとも重要な器官は？', choices: ['胃', '肝臓', '小腸', '大腸'], answer: 2, hint: '栄養分を吸収するのは主に「小腸（しょうちょう）」だよ！長さは約6〜7mもある！' },
-      { q: '地球の表面の約何%が海？', choices: ['約50%', '約60%', '約70%', '約80%'], answer: 2, hint: '地球の表面の約70%は海だよ！「水の星」とも呼ばれる理由だね！' },
-    ],
+    3: ['植物の育ち方（種→花→実）', '昆虫の育ち方（完全・不完全変態）', '風・ゴムのはたらき', '光と影・磁石のはたらき'],
+    4: ['季節と生き物の変化', '天気と気温・雨量', '月と星（見え方）', '水のすがた（三態変化）', '電気のはたらき（直列・並列）'],
+    5: ['植物の発芽と成長（条件）', 'メダカ・人の誕生', '天気の変化と予測', '流れる水のはたらき（侵食・堆積）', '電磁石'],
+    6: ['人体（消化・呼吸・循環・神経）', 'てこのはたらき（支点・力点・作用点）', '月と太陽（月相の変化）', '大地のつくりと変化', '水溶液の性質（酸・アルカリ）'],
   },
   social: {
-    3: [
-      { q: '日本の都道府県は全部でいくつ？', choices: ['44', '46', '47', '50'], answer: 2, hint: '47都道府県だよ！1都（東京）・1道（北海道）・2府（大阪・京都）・43県！' },
-      { q: 'スーパーマーケットの仕事は何？', choices: ['魚を取る', '食品などを売る', '車を作る', '電気を作る'], answer: 1, hint: 'スーパーマーケットは食品などを売るお店だよ！農家から仕入れて販売する！' },
-      { q: '地図で北はどの方向？', choices: ['下', '左', '上', '右'], answer: 2, hint: '地図では上が北、下が南、右が東、左が西だよ！' },
-      { q: '郵便局の仕事は何？', choices: ['教育', '手紙・荷物を届ける', '火を消す', '病気を治す'], answer: 1, hint: '郵便局は手紙や荷物を届けるのが仕事だよ！' },
-      { q: 'バスや電車を運転する人の仕事は？', choices: ['医者', '農家', '運転手', '漁師'], answer: 2, hint: 'バスや電車を運転するのは「運転手（うんてんしゅ）」だよ！' },
-    ],
-    4: [
-      { q: '家に届く水はどこから来る？', choices: ['海からそのまま', 'ダム・川から浄水場を通って', '雨水をそのまま', '地下から直接'], answer: 1, hint: 'ダムや川の水を浄水場（じょうすいじょ）できれいにしてから家に届けるよ！' },
-      { q: '「燃やせるごみ」はどこへ行く？', choices: ['川', '清掃工場', '学校', '公園'], answer: 1, hint: '燃やせるごみは清掃工場（せいそうこうじょう）で焼却処分されるよ！' },
-      { q: '都道府県知事（ちじ）を選ぶのは誰？', choices: ['総理大臣', 'その地域の住民', '天皇', '国会議員'], answer: 1, hint: '知事（ちじ）はその都道府県に住む人が選挙で選ぶよ！' },
-      { q: '昔から伝わる農業での米作りの道具は？', choices: ['トラクター', 'パソコン', 'くわ・鎌', 'スマホ'], answer: 2, hint: '昔はくわや鎌（かま）を使って農作業をしていたよ！今は機械化が進んでいる！' },
-      { q: '自然災害への備えで「ハザードマップ」とは？', choices: ['天気予報図', '危険な場所の地図', '農地の地図', '道路地図'], answer: 1, hint: 'ハザードマップは洪水や地震などの危険な場所を示した地図だよ！' },
-    ],
-    5: [
-      { q: '日本の国土で山地が占める割合は？', choices: ['約30%', '約50%', '約70%', '約90%'], answer: 2, hint: '日本は山がちな国で、国土の約70%が山地だよ！農地が少ない理由の一つ！' },
-      { q: '米の有名な産地はどれ？', choices: ['沖縄県', '新潟県', '東京都', '大阪府'], answer: 1, hint: '新潟県は「コシヒカリ」で有名な米の大産地だよ！北海道・秋田も有名！' },
-      { q: '日本で一番長い川は？', choices: ['利根川', '信濃川', '淀川', '天竜川'], answer: 1, hint: '日本で一番長い川は「信濃川（しなのがわ）」だよ！長さは367km！' },
-      { q: '日本の輸出品として昔から有名なものは？', choices: ['石油', '鉄鉱石', '自動車・機械類', '木材'], answer: 2, hint: '日本は自動車や機械類の輸出が有名だよ！トヨタ・ホンダなどが世界で活躍！' },
-      { q: '国会で法律を決めるのは誰？', choices: ['総理大臣', '天皇', '国会議員', '裁判所'], answer: 2, hint: '法律（ほうりつ）を作るのは「国会議員（こっかいぎいん）」！三権分立の立法権だね！' },
-    ],
-    6: [
-      { q: '大化の改新（たいかのかいしん）は何年？', choices: ['593年', '645年', '710年', '794年'], answer: 1, hint: '大化の改新は645年！中大兄皇子（なかのおおえのおうじ）と中臣鎌足（なかとみのかまたり）が中心！' },
-      { q: '日本国憲法が公布されたのは何年？', choices: ['1889年', '1945年', '1946年', '1952年'], answer: 2, hint: '日本国憲法は1946年11月3日に公布（こうふ）されたよ！施行は翌1947年5月3日！' },
-      { q: '「聖徳太子（しょうとくたいし）」が建てたとされるお寺は？', choices: ['東大寺', '法隆寺', '金閣寺', '清水寺'], answer: 1, hint: '法隆寺（ほうりゅうじ）は聖徳太子が建てたとされる世界最古の木造建築物！' },
-      { q: '江戸幕府を開いたのは誰？', choices: ['豊臣秀吉', '織田信長', '徳川家康', '源頼朝'], answer: 2, hint: '1603年に徳川家康（とくがわいえやす）が江戸幕府を開いたよ！江戸は今の東京！' },
-      { q: '日本国憲法の三原則のひとつ「基本的人権の尊重」とは？', choices: ['国が全て決める', '人は生まれながらに権利を持つ', '法律だけが正しい', '強い者が得をする'], answer: 1, hint: 'すべての人は生まれながらに権利（人権）を持つという考え方だよ！大切な原則！' },
-    ],
+    3: ['身近な地域・地図の読み方', '農家・畜産家のしごと', '工場・お店のしごと', '市の移り変わり・昔のくらし'],
+    4: ['都道府県・地方区分', '水道・ごみ処理のしくみ', '自然災害と地域の安全', '伝統と文化・地域の発展'],
+    5: ['国土の地形と気候', '農業・食料生産', '水産業・食料自給率', '工業・貿易', '情報通信・メディア'],
+    6: ['縄文・弥生・古墳時代', '飛鳥・奈良・平安時代', '鎌倉・室町時代', '安土桃山・江戸時代', '明治〜昭和・戦争と平和', '日本国憲法・三権分立', '国際社会・SDGs'],
   },
   english: {
-    5: [
-      { q: '"apple" の意味は？', choices: ['みかん', 'りんご', 'ぶどう', 'バナナ'], answer: 1, hint: '"apple（アップル）" はりんごだよ！🍎' },
-      { q: '"What time is it?" の意味は？', choices: ['何歳ですか？', '何時ですか？', 'どこですか？', '誰ですか？'], answer: 1, hint: '"What time（ホワット タイム）" で「何時」という意味だよ！' },
-      { q: '"I have a dog." の意味は？', choices: ['私は犬が好きです', '私は犬を飼っています', '私は犬が嫌いです', '私は犬を見ました'], answer: 1, hint: '"have（ハブ）" は「持っている・飼っている」という意味だよ！' },
-      { q: '"red, blue, green" はどんな言葉のグループ？', choices: ['食べ物', '色', '動物', '数字'], answer: 1, hint: '"red（赤）、blue（青）、green（緑）"は色の名前だよ！🎨' },
-      { q: '"Monday（マンデー）"は何曜日？', choices: ['日曜日', '月曜日', '火曜日', '水曜日'], answer: 1, hint: '"Monday" は月曜日！"月（Moon）"と関係あるよ！' },
-    ],
-    6: [
-      { q: '"I like playing soccer." の意味は？', choices: ['私はサッカーが得意です', '私はサッカーをするのが好きです', '私はサッカーを見るのが好きです', '私はサッカーが嫌いです'], answer: 1, hint: '"like ＋ 動詞ing" で「〜するのが好き」という意味だよ！' },
-      { q: '"Where are you from?" の意味は？', choices: ['どこに行きますか？', 'どこにいますか？', 'どこ出身ですか？', 'どこに住んでいますか？'], answer: 2, hint: '"from（フロム）" は「〜から・〜出身」という意味だよ！' },
-      { q: '"She can swim very well." の意味は？', choices: ['彼女は泳ぐのが好きです', '彼女はとても上手に泳げます', '彼女は泳いでいます', '彼女は泳げません'], answer: 1, hint: '"can（キャン）" は「〜できる」という意味！"very well" はとても上手に！' },
-      { q: '"What do you want to be?" の意味は？', choices: ['何が食べたいですか？', '何をしましたか？', 'どこへ行きたいですか？', '将来何になりたいですか？'], answer: 3, hint: '"want to be（ウォント トゥ ビー）" は「〜になりたい」！将来の夢を聞く表現だよ！' },
-      { q: '"Let\'s play together!" の意味は？', choices: ['ゆっくり遊んで！', '一緒に遊ぼう！', '遊ぶのをやめて！', '遊んだの？'], answer: 1, hint: '"Let\'s（レッツ）" は「〜しましょう」！"together（トゥゲザー）" は「一緒に」だよ！' },
-    ],
+    5: ['自己紹介・あいさつ', '学校生活・好きなこと', '時間・曜日・日付・月', '食べ物・動物・色・形・数'],
+    6: ['過去の出来事（夏休みなど）', '職業・将来の夢', '場所・道案内・位置', '世界の国・文化・行事'],
   },
 };
 
-// Science/social only start from grade 3
-const GRADE_LIMITS = {
-  math: [1,2,3,4,5,6],
-  japanese: [1,2,3,4,5,6],
-  science: [3,4,5,6],
-  social: [3,4,5,6],
-  english: [5,6],
+// ===================== STATE =====================
+let S = {
+  apiKey: localStorage.getItem('elemQuiz_key') || '',
+  subject: null,
+  grade: null,
+  unit: null,
+  questions: [],
+  idx: 0,
+  sCorrect: 0,
+  sWrong: 0,
+  answered: false,
+  perf: JSON.parse(localStorage.getItem('elemQuiz_perf') || '{}'),
 };
 
-// ==================== STATE ====================
-let currentSubject = null;
-let currentGrade = null;
-let currentQuestions = [];
-let currentIndex = 0;
-let currentScore = 0;
-let sessionCorrect = 0;
-let sessionWrong = 0;
-let answered = false;
-let totalScore = 0;
-let totalCorrect = 0;
-let totalWrong = 0;
+// ===================== INIT =====================
+if (S.apiKey) {
+  showScreen('home-screen');
+  refreshHome();
+}
 
-// ==================== LOGIC ====================
+// ===================== KEY MANAGEMENT =====================
+function saveKey() {
+  const k = document.getElementById('apiKeyInput').value.trim();
+  if (!k.startsWith('sk-ant')) { showToast('正しいAPIキーを入れてね！（sk-ant-で始まるやつ）'); return; }
+  S.apiKey = k;
+  localStorage.setItem('elemQuiz_key', k);
+  showScreen('home-screen');
+  refreshHome();
+}
+
+// ===================== NAVIGATION =====================
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
 }
 
-function selectSubject(subj) {
-  currentSubject = subj;
-  const info = SUBJECTS[subj];
-  document.getElementById('gradeEmoji').textContent = info.emoji;
-  document.getElementById('gradeTitle').textContent = info.name + 'をえらびました！';
+function goSubject(subj) {
+  S.subject = subj;
+  const info = SUBJ[subj];
+  document.getElementById('subjIcon').textContent = info.emoji;
+  document.getElementById('subjTitle').textContent = info.name + 'を復習しよう！';
+  document.documentElement.style.setProperty('--accent', info.color);
 
-  // Update accent color
-  const gradeGrid = document.getElementById('gradeGrid');
-  const gradeBtns = gradeGrid.querySelectorAll('.grade-btn');
-  gradeBtns.forEach(btn => {
-    btn.style.borderColor = info.color;
-    btn.style.color = 'var(--white)';
+  // grade tabs
+  const tabs = document.getElementById('gradeTabs');
+  tabs.innerHTML = '';
+  info.grades.forEach((g, i) => {
+    const b = document.createElement('button');
+    b.className = 'grade-tab' + (i === 0 ? ' active' : '');
+    b.textContent = g + '年生';
+    b.onclick = () => { tabs.querySelectorAll('.grade-tab').forEach(t => t.classList.remove('active')); b.classList.add('active'); renderUnits(subj, g); };
+    tabs.appendChild(b);
   });
+  renderUnits(subj, info.grades[0]);
+  showScreen('subject-screen');
+}
 
-  // Show only available grades
-  const available = GRADE_LIMITS[subj];
-  gradeBtns.forEach((btn, i) => {
-    const grade = i + 1;
-    if (available.includes(grade)) {
-      btn.style.opacity = '1';
-      btn.style.pointerEvents = 'auto';
-    } else {
-      btn.style.opacity = '0.2';
-      btn.style.pointerEvents = 'none';
+function renderUnits(subj, grade) {
+  S.grade = grade;
+  const grid = document.getElementById('unitsGrid');
+  grid.innerHTML = '';
+  (UNITS[subj][grade] || []).forEach(unit => {
+    const key = perfKey(subj, grade, unit);
+    const p = S.perf[key];
+    const card = document.createElement('div');
+    card.className = 'unit-card';
+    card.onclick = () => startQuiz(subj, grade, unit);
+
+    let perfClass = 'none', pctText = '未', attText = 'まだ挑戦なし';
+    if (p && p.attempts > 0) {
+      const r = Math.round(p.correct / p.attempts * 100);
+      pctText = r + '%';
+      attText = p.attempts + '回 · 正解' + p.correct + '問';
+      perfClass = r >= 75 ? 'good' : r >= 50 ? 'mid' : 'bad';
     }
+
+    card.innerHTML = `
+      <div class="unit-perf ${perfClass}">
+        <div class="unit-perf-pct">${pctText}</div>
+      </div>
+      <div class="unit-info">
+        <div class="unit-name">${unit}</div>
+        <div class="unit-attempts">${attText}</div>
+      </div>
+      <div class="unit-arrow">›</div>`;
+    grid.appendChild(card);
+  });
+}
+
+// ===================== QUIZ START =====================
+async function startQuiz(subj, grade, unit) {
+  S.subject = subj;
+  S.grade = grade;
+  S.unit = unit;
+  S.idx = 0;
+  S.sCorrect = 0;
+  S.sWrong = 0;
+  S.answered = false;
+
+  showScreen('loading-screen');
+  const loadSub = document.getElementById('loadingSub');
+  loadSub.textContent = SUBJ[subj].name + ' ' + grade + '年生「' + unit + '」の問題を作成中…';
+
+  try {
+    S.questions = await generateQuestions(subj, grade, unit);
+    setupQuizUI();
+    loadQuestion();
+    showScreen('quiz-screen');
+  } catch (e) {
+    console.error(e);
+    showToast('エラーが発生しました：' + e.message);
+    showScreen('subject-screen');
+  }
+}
+
+// ===================== CLAUDE API CALL =====================
+async function generateQuestions(subj, grade, unit) {
+  const key = perfKey(subj, grade, unit);
+  const p = S.perf[key];
+  let perfCtx = '';
+  if (p && p.attempts >= 3) {
+    const r = Math.round(p.correct / p.attempts * 100);
+    perfCtx = `\n\n【学習履歴】この単元の過去の正答率: ${r}%（${p.attempts}回挑戦済み）。${r < 60 ? '苦手なようなので、基礎的な確認問題を多めに含めてください。' : r >= 85 ? 'よく理解しているので、少し応用・発展的な問題も入れてください。' : '少し難しめの問題も混ぜてください。'}`;
+  }
+
+  const prompt = `あなたは日本の優秀な小学校の先生です。以下の条件でクイズ問題を5問作ってください。
+
+科目: ${SUBJ[subj].name}
+学年: ${grade}年生
+単元: ${unit}${perfCtx}
+
+【ルール】
+- すべて日本語
+- ${grade}年生の学習範囲・難易度に合わせる
+- 選択肢は必ず4つ
+- 正解は1つだけ（answerは0〜3のインデックス）
+- ヒントは1〜2文で、なぜそれが答えか分かるように書く
+- 問題は具体的で実践的なものにする（計算問題・知識問題・読解など）
+
+必ずこのJSONフォーマットだけで答えること（説明文・マークダウンは一切不要）:
+{"questions":[{"q":"問題文","choices":["A","B","C","D"],"answer":0,"hint":"ヒント文"}]}`;
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': S.apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-allow-browser': 'true',
+    },
+    body: JSON.stringify({
+      model: 'claude-haiku-4-5',
+      max_tokens: 2048,
+      messages: [{ role: 'user', content: prompt }],
+    }),
   });
 
-  showScreen('grade-screen');
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error?.message || 'APIエラー (' + res.status + ')');
+  }
+
+  const data = await res.json();
+  const text = data.content?.[0]?.text || '';
+
+  // extract JSON robustly
+  const match = text.match(/\{[\s\S]*\}/);
+  if (!match) throw new Error('AIの回答を解析できませんでした');
+  const parsed = JSON.parse(match[0]);
+  if (!parsed.questions || !Array.isArray(parsed.questions) || parsed.questions.length === 0) {
+    throw new Error('問題データが見つかりませんでした');
+  }
+  return parsed.questions;
 }
 
-function selectGrade(grade) {
-  currentGrade = grade;
-  const qs = QUESTIONS[currentSubject][grade];
-  if (!qs || qs.length === 0) return;
-
-  currentQuestions = shuffle([...qs]).slice(0, Math.min(5, qs.length));
-  currentIndex = 0;
-  currentScore = 0;
-  sessionCorrect = 0;
-  sessionWrong = 0;
-  answered = false;
-
-  setupQuizUI();
-  loadQuestion();
-  showScreen('quiz-screen');
-}
-
+// ===================== QUIZ UI =====================
 function setupQuizUI() {
-  const info = SUBJECTS[currentSubject];
-  document.getElementById('quizSubjectTag').textContent = info.name + ' · ' + currentGrade + '年生';
-  document.getElementById('quizSubjectTag').style.color = info.color;
-  document.getElementById('totalBadge').classList.add('show');
+  const info = SUBJ[S.subject];
+  document.getElementById('quizTag').textContent = info.name + ' · ' + S.grade + '年生 · ' + S.unit;
+  document.getElementById('quizTag').style.color = info.color;
 }
 
 function loadQuestion() {
-  const q = currentQuestions[currentIndex];
-  const total = currentQuestions.length;
+  const q = S.questions[S.idx];
+  const total = S.questions.length;
+  S.answered = false;
 
-  // Progress
-  document.getElementById('progressFill').style.width = (currentIndex / total * 100) + '%';
-  document.getElementById('qCounter').innerHTML = (currentIndex + 1) + ' <span>/ ' + total + '</span>';
-  document.getElementById('qGradeBadge').textContent = '🌟 ' + currentGrade + '年生レベル';
-  document.getElementById('questionText').textContent = q.q;
+  document.getElementById('progFill').style.width = (S.idx / total * 100) + '%';
+  document.getElementById('qCounter').innerHTML = (S.idx + 1) + ' <span>/ ' + total + '</span>';
+  document.getElementById('qBadge').textContent = '🌟 ' + S.grade + '年生 · ' + S.unit;
+  document.getElementById('qText').textContent = q.q;
 
-  // Choices
-  const grid = document.getElementById('choicesGrid');
-  grid.innerHTML = '';
-  const letters = ['Ａ', 'Ｂ', 'Ｃ', 'Ｄ'];
-  q.choices.forEach((choice, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'choice-btn';
-    btn.innerHTML = '<span class="choice-letter">' + letters[i] + '</span>' + choice;
-    btn.onclick = () => checkAnswer(i, btn);
-    grid.appendChild(btn);
+  // choices
+  const wrap = document.getElementById('choicesWrap');
+  wrap.innerHTML = '';
+  const letters = ['Ａ','Ｂ','Ｃ','Ｄ'];
+  q.choices.forEach((c, i) => {
+    const b = document.createElement('button');
+    b.className = 'choice';
+    b.innerHTML = '<span class="choice-letter">' + letters[i] + '</span>' + c;
+    b.onclick = () => checkAnswer(i, b);
+    wrap.appendChild(b);
   });
 
-  // Reset feedback
-  const fb = document.getElementById('feedbackArea');
-  fb.classList.remove('show');
+  // reset
+  document.getElementById('feedbackBox').classList.remove('show');
   document.getElementById('nextBtn').classList.remove('show');
-  answered = false;
 }
 
-function checkAnswer(selectedIdx, btn) {
-  if (answered) return;
-  answered = true;
+function checkAnswer(idx, btn) {
+  if (S.answered) return;
+  S.answered = true;
 
-  const q = currentQuestions[currentIndex];
-  const btns = document.querySelectorAll('.choice-btn');
-  btns.forEach(b => b.disabled = true);
-
-  const correct = selectedIdx === q.answer;
+  const q = S.questions[S.idx];
+  document.querySelectorAll('.choice').forEach(b => b.disabled = true);
+  const correct = idx === q.answer;
 
   if (correct) {
     btn.classList.add('correct');
-    sessionCorrect++;
-    totalCorrect++;
-    currentScore += 10;
-    totalScore += 10;
-    showBigFeedback('⭕');
-    playCorrectFeedback(q);
+    S.sCorrect++;
+    showBigFb('⭕');
+    showFeedback(true, q.hint);
   } else {
     btn.classList.add('wrong');
-    btns[q.answer].classList.add('correct');
-    sessionWrong++;
-    totalWrong++;
-    showBigFeedback('❌');
-    playWrongFeedback(q);
+    document.querySelectorAll('.choice')[q.answer].classList.add('correct');
+    S.sWrong++;
+    showBigFb('❌');
+    showFeedback(false, q.hint);
   }
 
-  // Update score
-  document.getElementById('totalScoreDisplay').textContent = totalScore;
-  updateMainScore();
-
-  // Show next button
-  setTimeout(() => {
-    document.getElementById('nextBtn').classList.add('show');
-  }, 800);
+  setTimeout(() => document.getElementById('nextBtn').classList.add('show'), 700);
 }
 
-function showBigFeedback(emoji) {
-  const el = document.getElementById('bigFeedback');
+function showFeedback(ok, hint) {
+  const box = document.getElementById('feedbackBox');
+  const okEmojis = ['🎉','✨','🌟','🔥','🎊'];
+  const ngEmojis = ['😅','💪','🤔','📚','😤'];
+  const okTitles = ['せいかい！すごい！','やったー！正解！','さすが！','パーフェクト！','天才かも！'];
+  const ngTitles = ['ざんねん！おしい！','もうちょっとだった！','つぎはがんばろう！','惜しい！','まちがえたけど覚えよう！'];
+  const r = n => Math.floor(Math.random() * n.length);
+
+  document.getElementById('fbEmoji').textContent = ok ? okEmojis[r(okEmojis)] : ngEmojis[r(ngEmojis)];
+  const t = document.getElementById('fbTitle');
+  t.textContent = ok ? okTitles[r(okTitles)] : ngTitles[r(ngTitles)];
+  t.style.color = ok ? 'var(--mint)' : 'var(--coral)';
+  document.getElementById('fbDetail').textContent = ok ? hint : '正解のヒント：' + hint;
+  box.classList.add('show');
+}
+
+function showBigFb(emoji) {
+  const el = document.getElementById('bigFb');
   el.textContent = emoji;
-  el.className = 'big-feedback show';
-  setTimeout(() => { el.classList.add('hide'); }, 600);
-  setTimeout(() => { el.className = 'big-feedback'; }, 900);
+  el.className = 'big-fb show';
+  setTimeout(() => el.classList.add('hide'), 550);
+  setTimeout(() => el.className = 'big-fb', 850);
 }
 
-function playCorrectFeedback(q) {
-  const fb = document.getElementById('feedbackArea');
-  fb.style.borderColor = 'rgba(107,203,119,0.3)';
-  document.getElementById('feedbackEmoji').textContent = ['🎉', '✨', '🌟', '🎊', '🔥'][Math.floor(Math.random()*5)];
-  document.getElementById('feedbackTitle').textContent = ['せいかい！すごい！', 'やったー！正解！', 'さすが！正解！', 'パーフェクト！', '天才かも！'][Math.floor(Math.random()*5)];
-  document.getElementById('feedbackTitle').style.color = 'var(--mint)';
-  document.getElementById('feedbackDetail').textContent = q.hint;
-  fb.classList.add('show');
-}
-
-function playWrongFeedback(q) {
-  const fb = document.getElementById('feedbackArea');
-  fb.style.borderColor = 'rgba(255,107,107,0.3)';
-  document.getElementById('feedbackEmoji').textContent = ['😅', '💪', '🤔', '📚', '😤'][Math.floor(Math.random()*5)];
-  document.getElementById('feedbackTitle').textContent = ['ざんねん！おしい！', 'もうちょっとだった！', 'つぎはがんばろう！', 'おしい！惜しい！', 'まちがえたけど覚えよう！'][Math.floor(Math.random()*5)];
-  document.getElementById('feedbackTitle').style.color = 'var(--coral)';
-  document.getElementById('feedbackDetail').textContent = '正解のヒント：' + q.hint;
-  fb.classList.add('show');
-}
-
-function nextQuestion() {
-  currentIndex++;
-  if (currentIndex >= currentQuestions.length) {
+function nextQ() {
+  S.idx++;
+  if (S.idx >= S.questions.length) {
+    savePerformance();
     showResult();
   } else {
     loadQuestion();
   }
 }
 
+// ===================== PERFORMANCE =====================
+function perfKey(subj, grade, unit) {
+  return subj + '_' + grade + '_' + unit;
+}
+
+function savePerformance() {
+  const key = perfKey(S.subject, S.grade, S.unit);
+  const prev = S.perf[key] || { attempts: 0, correct: 0 };
+  S.perf[key] = {
+    attempts: prev.attempts + S.questions.length,
+    correct: prev.correct + S.sCorrect,
+    lastStudied: new Date().toISOString().slice(0, 10),
+  };
+  localStorage.setItem('elemQuiz_perf', JSON.stringify(S.perf));
+}
+
+// ===================== RESULT =====================
 function showResult() {
-  document.getElementById('progressFill').style.width = '100%';
+  const total = S.questions.length;
+  const rate = Math.round(S.sCorrect / total * 100);
+  const score = S.sCorrect * 10;
 
-  const total = currentQuestions.length;
-  const rate = Math.round(sessionCorrect / total * 100);
-
-  // Grade
   let rank, grade, msg;
-  if (rate === 100) { rank = '🏆'; grade = '満点！完璧！'; msg = 'ぜんもん正解！！天才すぎる！！'; spawnConfetti(); }
-  else if (rate >= 80) { rank = '🥇'; grade = 'めちゃすごい！'; msg = 'ほぼ満点！かなりできてるぞ！'; }
-  else if (rate >= 60) { rank = '🥈'; grade = 'なかなかいいね！'; msg = 'まちがえたところをもう一度チェック！'; }
-  else if (rate >= 40) { rank = '🥉'; grade = 'もう少しかな！'; msg = 'あきらめないで！くり返し練習しよう！'; }
-  else { rank = '📚'; grade = 'よし、勉強しよう！'; msg = 'まずは教科書を読み直してみよう！きっとできるよ！'; }
+  if (rate === 100) { rank = '🏆'; grade = '満点！完璧！'; msg = '全問正解！！君は天才だ！！'; confetti(); }
+  else if (rate >= 80) { rank = '🥇'; grade = 'めちゃすごい！'; msg = 'ほぼ満点！よく頑張ったね！'; }
+  else if (rate >= 60) { rank = '🥈'; grade = 'なかなかいいね！'; msg = 'まちがえたところをチェックしよう！'; }
+  else if (rate >= 40) { rank = '🥉'; grade = 'もう少し！'; msg = 'あきらめないで！くり返し練習しよう！'; }
+  else { rank = '📚'; grade = 'まだまだこれから！'; msg = 'もう一度チャレンジしてみよう！'; }
 
   document.getElementById('resultRank').textContent = rank;
   document.getElementById('resultGrade').textContent = grade;
-  document.getElementById('resultMessage').textContent = msg;
-  document.getElementById('resultScore').innerHTML = currentScore + ' <span>点</span>';
-  document.getElementById('correctCount').textContent = sessionCorrect;
-  document.getElementById('wrongCount').textContent = sessionWrong;
-  document.getElementById('resultAccuracy').textContent = '正答率 ' + rate + '%';
-
+  document.getElementById('resultMsg').textContent = msg;
+  document.getElementById('resultScore').innerHTML = score + ' <span>点</span>';
+  document.getElementById('resultAcc').innerHTML = '正答率 <span style="color:var(--yellow)">' + rate + '%</span>';
+  document.getElementById('resCorrect').textContent = S.sCorrect;
+  document.getElementById('resWrong').textContent = S.sWrong;
   showScreen('result-screen');
 }
 
 function retryQuiz() {
-  selectGrade(currentGrade);
+  startQuiz(S.subject, S.grade, S.unit);
 }
 
-function updateMainScore() {
-  const total = totalCorrect + totalWrong;
-  document.getElementById('totalScore').textContent = totalScore;
-  document.getElementById('correctRate').textContent = total > 0 ? Math.round(totalCorrect/total*100) + '%' : '-';
-}
+// ===================== HOME REFRESH =====================
+function refreshHome() {
+  const perf = S.perf;
+  const keys = Object.keys(perf);
+  let total = 0, correct = 0;
+  keys.forEach(k => { total += perf[k].attempts; correct += perf[k].correct; });
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statRate').textContent = total > 0 ? Math.round(correct / total * 100) + '%' : '-';
+  document.getElementById('statUnits').textContent = keys.length;
 
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+  // recommendations: units with < 60% or not tried
+  const recs = [];
+  Object.keys(UNITS).forEach(subj => {
+    SUBJ[subj].grades.forEach(g => {
+      (UNITS[subj][g] || []).forEach(unit => {
+        const k = perfKey(subj, g, unit);
+        const p = perf[k];
+        if (!p) return; // not tried yet, skip
+        if (p.attempts > 0) {
+          const r = p.correct / p.attempts;
+          if (r < 0.6) recs.push({ subj, g, unit, r, attempts: p.attempts });
+        }
+      });
+    });
+  });
+
+  recs.sort((a, b) => a.r - b.r);
+  const top = recs.slice(0, 3);
+  const box = document.getElementById('recBox');
+  const items = document.getElementById('recItems');
+  if (top.length > 0) {
+    items.innerHTML = '';
+    top.forEach(rec => {
+      const rate = Math.round(rec.r * 100);
+      const div = document.createElement('div');
+      div.className = 'rec-item';
+      div.onclick = () => { goSubject(rec.subj); };
+      div.innerHTML = `<div class="rec-dot ${rate < 40 ? 'bad' : 'mid'}"></div>
+        <span>${SUBJ[rec.subj].emoji} ${SUBJ[rec.subj].name} ${rec.g}年「${rec.unit}」<span style="opacity:.6;font-size:11px"> 正答率${rate}%</span></span>`;
+      items.appendChild(div);
+    });
+    box.style.display = '';
+  } else {
+    box.style.display = 'none';
   }
-  return arr;
 }
 
-function spawnConfetti() {
+// ===================== CONFETTI =====================
+function confetti() {
   const wrap = document.getElementById('confettiWrap');
   const colors = ['#ffd93d','#ff6b6b','#6bcb77','#4d96ff','#ff87c3','#a855f7'];
-  for (let i = 0; i < 60; i++) {
+  for (let i = 0; i < 70; i++) {
     setTimeout(() => {
       const el = document.createElement('div');
       el.className = 'confetto';
-      el.style.left = Math.random() * 100 + 'vw';
-      el.style.background = colors[Math.floor(Math.random() * colors.length)];
-      el.style.animationDelay = Math.random() * 0.5 + 's';
-      el.style.animationDuration = (1 + Math.random()) + 's';
-      el.style.transform = `rotate(${Math.random()*360}deg)`;
+      el.style.cssText = `left:${Math.random()*100}vw;background:${colors[~~(Math.random()*colors.length)]};animation-delay:${Math.random()*.4}s;animation-duration:${1.2+Math.random()*.8}s;transform:rotate(${Math.random()*360}deg)`;
       wrap.appendChild(el);
-      setTimeout(() => el.remove(), 2000);
-    }, i * 20);
+      setTimeout(() => el.remove(), 2200);
+    }, i * 18);
   }
 }
+
+// ===================== TOAST =====================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show';
+  setTimeout(() => t.className = 'toast', 3500);
+}
+
+// ===================== ENTER KEY =====================
+document.getElementById('apiKeyInput').addEventListener('keydown', e => { if (e.key === 'Enter') saveKey(); });
 </script>
 </body>
 </html>
