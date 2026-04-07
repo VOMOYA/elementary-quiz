@@ -535,8 +535,8 @@ body::before {
     <div class="key-card">
       <div class="key-icon">🤖</div>
       <h2 class="key-title">AIクイズをはじめよう！</h2>
-      <p class="key-desc">Claude AIが君だけの問題を作ってくれるよ！<br>AnthropicのAPIキーを入れてね。</p>
-      <input class="key-input" id="apiKeyInput" type="password" placeholder="sk-ant-api..." spellcheck="false" />
+      <p class="key-desc">Gemini AIが君だけの問題を作ってくれるよ！<br>GoogleのAPIキーを入れてね。</p>
+      <input class="key-input" id="apiKeyInput" type="password" placeholder="AIzaSy..." spellcheck="false" />
       <button class="key-save-btn" onclick="saveKey()">✨ はじめる！</button>
       <p class="key-notice">🔒 APIキーはこのブラウザだけに保存されます<br>外に送られることはありません</p>
     </div>
@@ -736,7 +736,7 @@ if (S.apiKey) {
 // ===================== KEY MANAGEMENT =====================
 function saveKey() {
   const k = document.getElementById('apiKeyInput').value.trim();
-  if (!k.startsWith('sk-ant')) { showToast('正しいAPIキーを入れてね！（sk-ant-で始まるやつ）'); return; }
+  if (!k.startsWith('AIza')) { showToast('正しいAPIキーを入れてね！（AIzaSy...で始まるやつ）'); return; }
   S.apiKey = k;
   localStorage.setItem('elemQuiz_key', k);
   showScreen('home-screen');
@@ -856,20 +856,17 @@ async function generateQuestions(subj, grade, unit) {
 必ずこのJSONフォーマットだけで答えること（説明文・マークダウンは一切不要）:
 {"questions":[{"q":"問題文","choices":["A","B","C","D"],"answer":0,"hint":"ヒント文"}]}`;
 
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': S.apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-allow-browser': 'true',
-    },
-    body: JSON.stringify({
-      model: 'claude-haiku-4-5',
-      max_tokens: 2048,
-      messages: [{ role: 'user', content: prompt }],
-    }),
-  });
+  const res = await fetch(
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=' + S.apiKey,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.9, maxOutputTokens: 2048 },
+      }),
+    }
+  );
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
@@ -877,7 +874,7 @@ async function generateQuestions(subj, grade, unit) {
   }
 
   const data = await res.json();
-  const text = data.content?.[0]?.text || '';
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
   // extract JSON robustly
   const match = text.match(/\{[\s\S]*\}/);
