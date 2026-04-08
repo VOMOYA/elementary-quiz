@@ -504,6 +504,180 @@ body::before {
 .big-fb.show { transform: translate(-50%,-50%) scale(1); opacity: 1; }
 .big-fb.hide { transform: translate(-50%,-50%) scale(2.5); opacity: 0; }
 
+/* ── AI tutor drawer ── */
+.tutor-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.55);
+  z-index: 400;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s;
+}
+.tutor-backdrop.open { opacity: 1; pointer-events: auto; }
+
+.tutor-drawer {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #1c1a3e;
+  border-radius: 24px 24px 0 0;
+  border-top: 2px solid rgba(255,255,255,.1);
+  z-index: 401;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
+  transition: transform .35s cubic-bezier(.32,.72,0,1);
+}
+.tutor-drawer.open { transform: translateY(0); }
+
+.tutor-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  flex-shrink: 0;
+}
+.tutor-head-icon { font-size: 28px; }
+.tutor-head-info { flex: 1; }
+.tutor-head-title { font-size: 15px; font-weight: 900; }
+.tutor-head-sub { font-size: 11px; color: rgba(240,238,255,.55); margin-top: 2px; }
+.tutor-close {
+  background: rgba(255,255,255,.08);
+  border: none; color: var(--white);
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background .2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.tutor-close:hover { background: rgba(255,255,255,.18); }
+
+.tutor-qpreview {
+  margin: 10px 16px 0;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: rgba(240,238,255,.7);
+  line-height: 1.5;
+  flex-shrink: 0;
+}
+
+.tutor-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+}
+.tutor-messages::-webkit-scrollbar { width: 4px; }
+.tutor-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 4px; }
+
+.msg {
+  display: flex;
+  gap: 8px;
+  animation: fadeUp .25s ease;
+}
+.msg.user { flex-direction: row-reverse; }
+.msg-avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.1);
+  font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.msg.ai .msg-avatar { background: rgba(77,150,255,.2); }
+.msg.user .msg-avatar { background: rgba(255,135,195,.2); }
+.msg-bubble {
+  max-width: 80%;
+  border-radius: 16px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.65;
+}
+.msg.ai .msg-bubble {
+  background: var(--bg3);
+  border: 1px solid rgba(255,255,255,.1);
+  border-bottom-left-radius: 4px;
+}
+.msg.user .msg-bubble {
+  background: linear-gradient(135deg, rgba(77,150,255,.3), rgba(168,85,247,.3));
+  border: 1px solid rgba(77,150,255,.3);
+  border-bottom-right-radius: 4px;
+  text-align: right;
+}
+.msg-bubble .typing { display: inline-block; }
+.msg-bubble .cursor {
+  display: inline-block;
+  width: 2px; height: 14px;
+  background: var(--sky);
+  margin-left: 2px;
+  vertical-align: middle;
+  animation: blink .7s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+
+.tutor-input-wrap {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px 20px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  flex-shrink: 0;
+}
+.tutor-input {
+  flex: 1;
+  background: rgba(255,255,255,.07);
+  border: 1.5px solid rgba(255,255,255,.15);
+  border-radius: 100px;
+  padding: 11px 18px;
+  color: var(--white);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color .2s;
+}
+.tutor-input:focus { border-color: var(--sky); }
+.tutor-input::placeholder { color: rgba(240,238,255,.35); }
+.tutor-send {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, var(--sky), var(--purple));
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.tutor-send:hover { transform: scale(1.08); }
+.tutor-send:disabled { opacity: .4; cursor: default; transform: none; }
+
+/* ask-ai button in quiz */
+.ask-ai-btn {
+  display: none;
+  width: 100%;
+  background: rgba(77,150,255,.12);
+  border: 1.5px solid rgba(77,150,255,.4);
+  color: var(--sky);
+  border-radius: 100px;
+  padding: 13px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+  margin-top: 10px;
+}
+.ask-ai-btn:hover { background: rgba(77,150,255,.22); }
+.ask-ai-btn.show { display: block; }
+
 /* ── error toast ── */
 .toast {
   position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
@@ -638,6 +812,7 @@ body::before {
       </div>
 
       <button class="next-btn" id="nextBtn" onclick="nextQ()">つぎへ →</button>
+      <button class="ask-ai-btn" id="askAiBtn" onclick="openTutor()">🤔 わからない？AIに聞く</button>
     </div>
   </div>
 </div>
@@ -667,6 +842,25 @@ body::before {
 <div class="confetti-wrap" id="confettiWrap"></div>
 <div class="big-fb" id="bigFb"></div>
 <div class="toast" id="toast"></div>
+
+<!-- ================ AI TUTOR DRAWER ================ -->
+<div class="tutor-backdrop" id="tutorBackdrop" onclick="closeTutor()"></div>
+<div class="tutor-drawer" id="tutorDrawer">
+  <div class="tutor-head">
+    <div class="tutor-head-icon">🧑‍🏫</div>
+    <div class="tutor-head-info">
+      <div class="tutor-head-title">AIせんせいに聞く</div>
+      <div class="tutor-head-sub" id="tutorHeadSub">なんでも聞いてね！</div>
+    </div>
+    <button class="tutor-close" onclick="closeTutor()">✕</button>
+  </div>
+  <div class="tutor-qpreview" id="tutorQPreview"></div>
+  <div class="tutor-messages" id="tutorMessages"></div>
+  <div class="tutor-input-wrap">
+    <input class="tutor-input" id="tutorInput" placeholder="わからないことを聞いてね…" />
+    <button class="tutor-send" id="tutorSendBtn" onclick="sendTutor()">↑</button>
+  </div>
+</div>
 
 <script>
 // ===================== CURRICULUM DATA =====================
@@ -897,6 +1091,7 @@ function loadQuestion() {
   const q = S.questions[S.idx];
   const total = S.questions.length;
   S.answered = false;
+  resetTutor();
 
   document.getElementById('progFill').style.width = (S.idx / total * 100) + '%';
   document.getElementById('qCounter').innerHTML = (S.idx + 1) + ' <span>/ ' + total + '</span>';
@@ -941,7 +1136,10 @@ function checkAnswer(idx, btn) {
     showFeedback(false, q.hint);
   }
 
-  setTimeout(() => document.getElementById('nextBtn').classList.add('show'), 700);
+  setTimeout(() => {
+    document.getElementById('nextBtn').classList.add('show');
+    document.getElementById('askAiBtn').classList.add('show');
+  }, 700);
 }
 
 function showFeedback(ok, hint) {
@@ -969,6 +1167,7 @@ function showBigFb(emoji) {
 }
 
 function nextQ() {
+  document.getElementById('askAiBtn').classList.remove('show');
   S.idx++;
   if (S.idx >= S.questions.length) {
     savePerformance();
@@ -1091,8 +1290,157 @@ function showToast(msg) {
   setTimeout(() => t.className = 'toast', 3500);
 }
 
+// ===================== AI TUTOR =====================
+let tutorHistory = [];   // {role, parts:[{text}]}
+let tutorStreaming = false;
+
+function openTutor() {
+  const q = S.questions[S.idx];
+  const info = SUBJ[S.subject];
+  const correctText = q.choices[q.answer];
+
+  // header
+  document.getElementById('tutorHeadSub').textContent =
+    info.name + ' ' + S.grade + '年生「' + S.unit + '」';
+
+  // question preview
+  document.getElementById('tutorQPreview').textContent =
+    '📝 ' + q.q + '\n✅ 正解：' + correctText;
+
+  // reset conversation when opening fresh on a new question
+  if (tutorHistory.length === 0) {
+    document.getElementById('tutorMessages').innerHTML = '';
+    addTutorMsg('ai',
+      'こんにちは！😊 この問題について、なにかわからないことはある？\n' +
+      'なんでも気軽に聞いてね！'
+    );
+  }
+
+  document.getElementById('tutorBackdrop').classList.add('open');
+  document.getElementById('tutorDrawer').classList.add('open');
+  setTimeout(() => document.getElementById('tutorInput').focus(), 350);
+}
+
+function closeTutor() {
+  document.getElementById('tutorBackdrop').classList.remove('open');
+  document.getElementById('tutorDrawer').classList.remove('open');
+}
+
+function addTutorMsg(role, text) {
+  const wrap = document.getElementById('tutorMessages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  const avatar = role === 'ai' ? '🧑‍🏫' : '🙋';
+  div.innerHTML = `<div class="msg-avatar">${avatar}</div><div class="msg-bubble" id="msg-${Date.now()}">${escHtml(text)}</div>`;
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+  return div.querySelector('.msg-bubble');
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+async function sendTutor() {
+  if (tutorStreaming) return;
+  const input = document.getElementById('tutorInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  addTutorMsg('user', text);
+
+  const q = S.questions[S.idx];
+  const info = SUBJ[S.subject];
+  const correctText = q.choices[q.answer];
+
+  // Build system context as first user turn if history is empty
+  const systemCtx = `あなたは小学${S.grade}年生の子どもに教えるやさしい先生です。
+今、${info.name}（${S.grade}年生）の「${S.unit}」の問題について質問されています。
+
+【問題】${q.q}
+【正解】${correctText}
+【解説ヒント】${q.hint}
+
+ルール：
+・小学${S.grade}年生が分かるような言葉で話す
+・短く分かりやすく答える（長すぎない）
+・絵文字を使ってOK
+・褒めながら丁寧に教える
+・答えを直接教えすぎず、考え方を教える`;
+
+  // maintain history
+  tutorHistory.push({ role: 'user', parts: [{ text }] });
+
+  // build contents: inject system as first turn
+  const contents = [
+    { role: 'user', parts: [{ text: systemCtx + '\n\n' + text }] },
+    ...tutorHistory.slice(1),
+  ];
+
+  // show streaming bubble
+  const bubble = addTutorMsg('ai', '');
+  bubble.innerHTML = '<span class="cursor"></span>';
+  tutorStreaming = true;
+  document.getElementById('tutorSendBtn').disabled = true;
+
+  try {
+    const res = await fetch(
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:streamGenerateContent?alt=sse&key=' + S.apiKey,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents, generationConfig: { temperature: 1.0, maxOutputTokens: 512 } }),
+      }
+    );
+
+    if (!res.ok) throw new Error('APIエラー ' + res.status);
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = '';
+    let buf = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += decoder.decode(value, { stream: true });
+      const lines = buf.split('\n');
+      buf = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith('data:')) continue;
+        const jsonStr = line.slice(5).trim();
+        if (!jsonStr || jsonStr === '[DONE]') continue;
+        try {
+          const chunk = JSON.parse(jsonStr);
+          const delta = chunk.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          if (delta) {
+            fullText += delta;
+            bubble.innerHTML = escHtml(fullText) + '<span class="cursor"></span>';
+            document.getElementById('tutorMessages').scrollTop = 99999;
+          }
+        } catch {}
+      }
+    }
+
+    bubble.innerHTML = escHtml(fullText);
+    tutorHistory.push({ role: 'model', parts: [{ text: fullText }] });
+
+  } catch (e) {
+    bubble.innerHTML = '⚠️ エラーが起きたよ：' + escHtml(e.message);
+  } finally {
+    tutorStreaming = false;
+    document.getElementById('tutorSendBtn').disabled = false;
+    document.getElementById('tutorInput').focus();
+  }
+}
+
+// reset tutor history when question changes
+function resetTutor() { tutorHistory = []; }
+
 // ===================== ENTER KEY =====================
 document.getElementById('apiKeyInput').addEventListener('keydown', e => { if (e.key === 'Enter') saveKey(); });
+document.getElementById('tutorInput').addEventListener('keydown', e => { if (e.key === 'Enter') sendTutor(); });
 </script>
 </body>
 </html>
