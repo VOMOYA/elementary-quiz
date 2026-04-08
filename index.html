@@ -661,7 +661,7 @@ body::before {
 
 /* ask-ai button in quiz */
 .ask-ai-btn {
-  display: none;
+  display: block;
   width: 100%;
   background: rgba(77,150,255,.12);
   border: 1.5px solid rgba(77,150,255,.4);
@@ -676,7 +676,6 @@ body::before {
   margin-top: 10px;
 }
 .ask-ai-btn:hover { background: rgba(77,150,255,.22); }
-.ask-ai-btn.show { display: block; }
 
 /* ── error toast ── */
 .toast {
@@ -1136,10 +1135,7 @@ function checkAnswer(idx, btn) {
     showFeedback(false, q.hint);
   }
 
-  setTimeout(() => {
-    document.getElementById('nextBtn').classList.add('show');
-    document.getElementById('askAiBtn').classList.add('show');
-  }, 700);
+  setTimeout(() => document.getElementById('nextBtn').classList.add('show'), 700);
 }
 
 function showFeedback(ok, hint) {
@@ -1167,7 +1163,6 @@ function showBigFb(emoji) {
 }
 
 function nextQ() {
-  document.getElementById('askAiBtn').classList.remove('show');
   S.idx++;
   if (S.idx >= S.questions.length) {
     savePerformance();
@@ -1355,19 +1350,19 @@ async function sendTutor() {
   const correctText = q.choices[q.answer];
 
   // Build system context as first user turn if history is empty
+  const answered = S.answered;
   const systemCtx = `あなたは小学${S.grade}年生の子どもに教えるやさしい先生です。
 今、${info.name}（${S.grade}年生）の「${S.unit}」の問題について質問されています。
 
 【問題】${q.q}
-【正解】${correctText}
-【解説ヒント】${q.hint}
+${answered ? `【正解】${correctText}\n【解説ヒント】${q.hint}` : '【状況】まだ生徒は答えていません。正解は絶対に教えないこと。'}
 
 ルール：
 ・小学${S.grade}年生が分かるような言葉で話す
 ・短く分かりやすく答える（長すぎない）
 ・絵文字を使ってOK
 ・褒めながら丁寧に教える
-・答えを直接教えすぎず、考え方を教える`;
+${answered ? '・なぜその答えになるか、考え方を丁寧に説明する' : '・ヒントや考え方のコツを教えるが、答えは絶対に言わない'}`;
 
   // maintain history
   tutorHistory.push({ role: 'user', parts: [{ text }] });
